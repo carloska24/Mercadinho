@@ -36,6 +36,23 @@ public class VendaService : IVendaService
         );
     }
 
+    public IReadOnlyList<Produto> PesquisarProdutos(string termo)
+    {
+        if (string.IsNullOrWhiteSpace(termo))
+            return _produtos.Where(p => p.Ativo).ToList().AsReadOnly();
+
+        var query = termo.Trim().ToLowerInvariant();
+        return _produtos.Where(p =>
+            p.Ativo && (
+                p.Descricao.ToLowerInvariant().Contains(query) ||
+                p.Codigo.ToLowerInvariant().Contains(query) ||
+                p.EAN.ToLowerInvariant().Contains(query) ||
+                p.PLU.ToLowerInvariant().Contains(query) ||
+                p.Categoria.ToLowerInvariant().Contains(query)
+            )
+        ).ToList().AsReadOnly();
+    }
+
     public ItemVenda? AdicionarItem(string eanOuCodigo, decimal quantidade = 1m, decimal descontoItem = 0m)
     {
         if (_vendaAtual.Status != StatusVenda.EmAberto)
@@ -50,6 +67,15 @@ public class VendaService : IVendaService
         }
 
         if (quantidade <= 0) quantidade = 1m;
+
+        // CONSOLIDAÇÃO DE PRODUTO REPETIDO (PDV_MELHORIAS_LAYOUT_E_FLUXO.md - Seção 6)
+        var itemExistente = _vendaAtual.Itens.FirstOrDefault(i => i.ProdutoId == produto.Id);
+        if (itemExistente != null)
+        {
+            itemExistente.Quantidade += quantidade;
+            itemExistente.Desconto += descontoItem;
+            return itemExistente;
+        }
 
         var sequencial = _vendaAtual.Itens.Count + 1;
         var item = new ItemVenda
@@ -92,8 +118,15 @@ public class VendaService : IVendaService
     public bool AplicarDescontoVenda(decimal valorDesconto)
     {
         if (valorDesconto < 0) return false;
-        _vendaAtual.Desconto = valorDesconto;
+        _vendaAtual.Desconto = Math.Min(_vendaAtual.Subtotal, valorDesconto);
         return true;
+    }
+
+    public bool AplicarDescontoPercentualVenda(decimal percentual)
+    {
+        if (percentual < 0 || percentual > 100) return false;
+        var valorCalculado = Math.Round(_vendaAtual.Subtotal * (percentual / 100m), 2);
+        return AplicarDescontoVenda(valorCalculado);
     }
 
     public bool FinalizarVenda(TipoPagamento tipoPagamento, decimal valorPago, out decimal troco, out string mensagemErro)

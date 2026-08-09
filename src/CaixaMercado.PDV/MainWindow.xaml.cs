@@ -17,12 +17,19 @@ public partial class MainWindow : Window
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
+        if (DataContext is MainViewModel vm)
+        {
+            vm.RequestFocusEan += FocarCampoEan;
+        }
         FocarCampoEan();
     }
 
     private void FocarCampoEan()
     {
-        TxtEanInput.Focus();
-        Keyboard.Focus(TxtEanInput);
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            TxtEanInput.Focus();
+            Keyboard.Focus(TxtEanInput);
+        }));
     }
 }
