@@ -254,7 +254,13 @@ public class MainViewModel : ViewModelBase
     public bool IsVendaConcluidaVisivel
     {
         get => _isVendaConcluidaVisivel;
-        set => SetProperty(ref _isVendaConcluidaVisivel, value);
+        set
+        {
+            if (SetProperty(ref _isVendaConcluidaVisivel, value))
+            {
+                OnPropertyChanged(nameof(IsCaixaLivreVisivel));
+            }
+        }
     }
 
     public decimal UltimoTrocoFinalizado
@@ -486,6 +492,7 @@ public class MainViewModel : ViewModelBase
         OnPropertyChanged(nameof(CaixaAtual));
         OnPropertyChanged(nameof(HasItens));
         OnPropertyChanged(nameof(HasNoItens));
+        OnPropertyChanged(nameof(IsCaixaLivreVisivel));
 
         (AbrirPagamentoCommand as RelayCommand)?.RaiseCanExecuteChanged();
         (AbrirDescontoCommand as RelayCommand)?.RaiseCanExecuteChanged();
@@ -494,4 +501,5 @@ public class MainViewModel : ViewModelBase
 
     public bool HasItens => Itens.Count > 0;
     public bool HasNoItens => Itens.Count == 0;
+    public bool IsCaixaLivreVisivel => Itens.Count == 0 && !IsVendaConcluidaVisivel;
 }
