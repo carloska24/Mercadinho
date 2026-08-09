@@ -510,14 +510,30 @@
             </Border>
         </Grid>
 
-        <!-- MODAL F9: FINALIZAR PAGAMENTO -->
+        <!-- MODAL F9: FINALIZAR PAGAMENTO (CHECKOUT COM HERO SVG OFICIAL fi_13791848) -->
         <Grid Grid.RowSpan="4" Visibility="{Binding IsModalPagamentoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#CC0F172A">
             <Border Background="#1E293B" BorderBrush="#3B82F6" BorderThickness="2" CornerRadius="8" Width="550" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="24">
                 <StackPanel>
-                    <DockPanel Margin="0,0,0,16">
-                        <TextBlock Text="FINALIZAR PAGAMENTO (F9)" Foreground="#F8FAFC" FontSize="20" FontWeight="Bold" />
+                    <DockPanel Margin="0,0,0,12">
+                        <TextBlock Text="FINALIZAR PAGAMENTO (F9)" Foreground="#F8FAFC" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
                         <Button Content="✕ ESC" Command="{Binding FecharModalPagamentoCommand}" Background="Transparent" Foreground="#94A3B8" BorderThickness="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Cursor="Hand" />
                     </DockPanel>
+
+                    <!-- SVG Hero Oficial de Checkout/Pagamento (fi_13791848) -->
+                    <Viewbox Width="70" Height="70" HorizontalAlignment="Center" Margin="0,0,0,12">
+                        <Canvas Width="90" Height="90">
+                            <!-- Roda Traseira -->
+                            <Path Data="m62.877 74.083c1.761.006 3.183 1.433 3.183 3.188 0 1.761-1.428 3.188-3.183 3.188-1.761 0-3.188-1.427-3.188-3.188.001-1.755 1.428-3.182 3.188-3.188zm0-3.781c-3.854 0-6.975 3.12-6.975 6.969 0 3.854 3.121 6.975 6.975 6.975 3.85 0 6.968-3.12 6.968-6.975.001-3.849-3.118-6.969-6.968-6.969z" Fill="#38BDF8" />
+                            <!-- Roda Dianteira -->
+                            <Path Data="m40.133 74.083c1.756.006 3.182 1.433 3.182 3.188 0 1.761-1.426 3.188-3.182 3.188-1.76 0-3.187-1.427-3.187-3.188 0-1.755 1.427-3.182 3.187-3.188zm0-3.781c-3.854 0-6.973 3.12-6.973 6.969 0 3.854 3.12 6.975 6.973 6.975 3.849 0 6.969-3.12 6.969-6.975 0-3.849-3.12-6.969-6.969-6.969z" Fill="#38BDF8" />
+                            <!-- Estrutura do Carrinho de Checkout -->
+                            <Path Data="m9.018 5.813c-.063 0-.129 0-.191.004-1.881.131-2.429 2.636-.777 3.542l7.473 4.229c.672.38 1.161 1.01 1.371 1.755l12.438 44.489c1.202 4.297 5.14 7.292 9.598 7.292h31.276c2.521 0 2.521-3.781 0-3.781h-31.276c-2.781 0-5.203-1.839-5.953-4.521l-.599-2.146h32.771c4.708 0 8.88-3.094 10.246-7.599l4.254-14 3.171-10.447c.735-2.412-2.879-3.51-3.615-1.098l-3.177 10.451-4.25 13.996c-.891 2.927-3.568 4.916-6.631 4.916h-33.827l-10.781-38.568c-.475-1.707-1.615-3.155-3.156-4.03l-7.464-4.224c-.276-.162-.583-.251-.901-.26z" Fill="#60B7FF" />
+                            <!-- Círculo de Check do Checkout -->
+                            <Path Data="m51.236 11.822c7.917 0 14.287 6.386 14.287 14.303 0 7.916-6.37 14.292-14.287 14.292-7.921 0-14.291-6.376-14.291-14.292.001-7.917 6.37-14.303 14.291-14.303zm0-3.776c-9.962 0-18.072 8.115-18.072 18.079 0 9.958 8.109 18.067 18.072 18.067 9.959 0 18.068-8.109 18.068-18.067.001-9.964-8.109-18.079-18.068-18.079z" Fill="#34D399" />
+                            <!-- Símbolo Check Verificado -->
+                            <Path Data="m58.34 19.125c-.557-.005-1.093.234-1.452.656l-8.396 9.511c-.043.047-.109.052-.156.005l-2.85-2.776c-.745-.745-1.958-.734-2.693.021-.733.756-.708 1.97.058 2.693l2.85 2.771c1.579 1.536 4.172 1.438 5.625-.213l8.396-9.506c1.093-1.209.249-3.141-1.382-3.162z" Fill="#34D399" />
+                        </Canvas>
+                    </Viewbox>
 
                     <!-- Total a Pagar no Modal -->
                     <Border Background="#020617" CornerRadius="6" Padding="12" Margin="0,0,0,16">
