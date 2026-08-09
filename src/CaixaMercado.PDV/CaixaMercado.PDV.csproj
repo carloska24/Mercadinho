@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\CaixaMercado.Domain\CaixaMercado.Domain.csproj" />
+    <ProjectReference Include="..\CaixaMercado.Application\CaixaMercado.Application.csproj" />
+    <ProjectReference Include="..\CaixaMercado.Infrastructure\CaixaMercado.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+</Project>

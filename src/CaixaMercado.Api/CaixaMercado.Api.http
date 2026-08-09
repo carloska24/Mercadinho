@@ -1,0 +1,6 @@
+@CaixaMercado.Api_HostAddress = http://localhost:5095
+
+GET {{CaixaMercado.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
