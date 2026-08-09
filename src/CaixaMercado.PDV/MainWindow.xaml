@@ -147,7 +147,7 @@
                     </DockPanel>
                 </Border>
 
-                <!-- CUPOM EM TEMPO REAL / DATAGRID DE ITENS REGISTRADOS -->
+                <!-- AREA DE VENDAS EM ANDAMENTO / CUPOM DE ITENS -->
                 <Border Grid.Row="2" Style="{StaticResource PdvCardStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -155,15 +155,23 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
+                        <!-- Cabeçalho Venda em Andamento -->
                         <DockPanel Grid.Row="0" Margin="0,0,0,8">
-                            <TextBlock Text="📋 ITENS REGISTRADOS NA VENDA (CUPOM EM TEMPO REAL)" Foreground="#F8FAFC" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
-                            <TextBlock Text="{Binding VendaAtual.TotalItens, StringFormat={}{0} iten(s)}" Foreground="#38BDF8" FontSize="13" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                            <TextBlock Text="VENDA EM ANDAMENTO" Foreground="#F8FAFC" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding VendaAtual.TotalItens, StringFormat={}{0} item(ns)}" Foreground="#38BDF8" FontSize="13" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" />
                         </DockPanel>
 
+                        <!-- ESTADO VAZIO DE CAIXA LIVRE (EMPTY SALE STATE COM CARRINHO VETORIAL) -->
+                        <Control Grid.Row="1"
+                                 Template="{StaticResource EmptySaleStateTemplate}"
+                                 Visibility="{Binding HasNoItens, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+                        <!-- DATAGRID DE ITENS DO CUPOM DA VENDA -->
                         <DataGrid Grid.Row="1"
                                   ItemsSource="{Binding Itens}"
                                   SelectedItem="{Binding ItemSelecionado, Mode=TwoWay}"
-                                  Style="{StaticResource PdvDataGridStyle}">
+                                  Style="{StaticResource PdvDataGridStyle}"
+                                  Visibility="{Binding HasItens, Converter={StaticResource BooleanToVisibilityConverter}}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="#" Binding="{Binding Sequencial}" Width="45" />
                                 <DataGridTextColumn Header="CÓDIGO" Binding="{Binding CodigoProduto}" Width="90" />

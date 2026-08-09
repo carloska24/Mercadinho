@@ -457,9 +457,14 @@ public class MainViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(VendaAtual));
         OnPropertyChanged(nameof(CaixaAtual));
+        OnPropertyChanged(nameof(HasItens));
+        OnPropertyChanged(nameof(HasNoItens));
 
         (AbrirPagamentoCommand as RelayCommand)?.RaiseCanExecuteChanged();
         (AbrirDescontoCommand as RelayCommand)?.RaiseCanExecuteChanged();
         (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
     }
+
+    public bool HasItens => Itens.Count > 0;
+    public bool HasNoItens => Itens.Count == 0;
 }
