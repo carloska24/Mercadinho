@@ -268,18 +268,98 @@
             </Grid>
         </Grid>
 
-        <!-- 2. BARRA INFERIOR DE ATALHOS DE TECLADO DO OPERADOR COM ÍCONES -->
-        <Border Grid.Row="2" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,1,0,1" Padding="12,4">
+        <!-- 2. BARRA INFERIOR DE ATALHOS DE TECLADO DO OPERADOR COM BOTÕES ESTILO KEYCAP -->
+        <Border Grid.Row="2" Background="#0F172A" BorderBrush="#334155" BorderThickness="0,1,0,1" Padding="6,4">
             <UniformGrid Columns="9" VerticalAlignment="Center">
-                <Button Content="🛒 F2 Produto" Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="👤 F3 Cliente" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="🔢 F4 Qtd" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="🏷️ F6 Desconto" Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="❌ F7 Canc Item" Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="🔍 F8 Consultar" Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="💵 F9 Pagamento" Command="{Binding AbrirPagamentoCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="🚫 ESC Cancelar" Command="{Binding CancelarVendaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="🗑️ DEL Remover" Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}" />
+                <!-- F2 PRODUTO -->
+                <Button Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#38BDF8" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F2" Foreground="#38BDF8" FontWeight="Bold" FontSize="11" />
+                        </Border>
+                        <TextBlock Text="🛒 Produto" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- F3 CLIENTE -->
+                <Button Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#334155" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F3" Foreground="#94A3B8" FontWeight="Bold" FontSize="11" />
+                        </Border>
+                        <TextBlock Text="👤 Cliente" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- F4 QTD -->
+                <Button Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#334155" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F4" Foreground="#94A3B8" FontWeight="Bold" FontSize="11" />
+                        </Border>
+                        <TextBlock Text="🔢 Qtd" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- F6 DESCONTO -->
+                <Button Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#FACC15" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F6" Foreground="#FACC15" FontWeight="Bold" FontSize="11" />
+                        </Border>
+                        <TextBlock Text="🏷️ Desconto" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- F7 CANC ITEM -->
+                <Button Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F7" Foreground="#EF4444" FontWeight="Bold" FontSize="11" />
+                        </Border>
+                        <TextBlock Text="❌ Canc Item" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- F8 CONSULTAR -->
+                <Button Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#38BDF8" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F8" Foreground="#38BDF8" FontWeight="Bold" FontSize="11" />
+                        </Border>
+                        <TextBlock Text="🔍 Consultar" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- F9 PAGAMENTO -->
+                <Button Command="{Binding AbrirPagamentoCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#34D399" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F9" Foreground="#34D399" FontWeight="Bold" FontSize="11" />
+                        </Border>
+                        <TextBlock Text="💵 Pagamento" Foreground="#34D399" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- ESC CANCELAR -->
+                <Button Command="{Binding CancelarVendaCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="ESC" Foreground="#EF4444" FontWeight="Bold" FontSize="10" />
+                        </Border>
+                        <TextBlock Text="🚫 Cancelar" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <!-- DEL REMOVER -->
+                <Button Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#080F1E" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="DEL" Foreground="#EF4444" FontWeight="Bold" FontSize="10" />
+                        </Border>
+                        <TextBlock Text="🗑️ Remover" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
             </UniformGrid>
         </Border>
 

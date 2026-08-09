@@ -1,14 +1,14 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Componente Reutilizável do Estado Venda Concluída (VendaConcluidaState) -->
+    <!-- Componente Reutilizável do Estado Venda Concluída (VendaConcluidaState com Carrinho Partindo) -->
     <ControlTemplate x:Key="VendaConcluidaStateTemplate">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24">
                 
                 <!-- Circulo Animado Verde com Checkmark SVG -->
-                <Grid HorizontalAlignment="Center" Margin="0,0,0,24">
-                    <Border Background="#064E3B" BorderBrush="#10B981" BorderThickness="2" CornerRadius="70" Width="140" Height="140" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                <Grid HorizontalAlignment="Center" Margin="0,0,0,16">
+                    <Border Background="#064E3B" BorderBrush="#10B981" BorderThickness="2" CornerRadius="60" Width="120" Height="120" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                         <Border.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform x:Name="CheckPulseScale" ScaleX="1" ScaleY="1" />
@@ -32,20 +32,45 @@
 
                     <!-- Ícone de Checkmark Vetorial (SVG Path) -->
                     <Path Data="M 9 16.17 L 4.83 12 L 3.41 13.41 L 9 19 L 21 7 L 19.59 5.59 Z"
-                          Fill="#34D399" Width="64" Height="64" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                          Fill="#34D399" Width="56" Height="56" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Grid>
 
                 <!-- Mensagem de Sucesso -->
-                <TextBlock Text="VENDA FINALIZADA!" Foreground="#34D399" FontSize="26" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,6" />
-                <TextBlock Text="Obrigado pela compra!" Foreground="#94A3B8" FontSize="16" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,20" />
+                <TextBlock Text="VENDA FINALIZADA!" Foreground="#34D399" FontSize="26" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,4" />
+                <TextBlock Text="Obrigado pela compra!" Foreground="#94A3B8" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,16" />
 
                 <!-- Card de Troco -->
-                <Border Background="#020617" BorderBrush="#10B981" BorderThickness="1.5" CornerRadius="8" Padding="20,12" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Border Background="#020617" BorderBrush="#10B981" BorderThickness="1.5" CornerRadius="8" Padding="20,10" HorizontalAlignment="Center" Margin="0,0,0,16">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="TROCO:" Foreground="#94A3B8" FontSize="18" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,12,0" />
-                        <TextBlock Text="{Binding UltimoTrocoFinalizado, StringFormat=R$ {0:N2}}" Foreground="#F59E0B" FontSize="28" FontWeight="Black" VerticalAlignment="Center" />
+                        <TextBlock Text="TROCO:" Foreground="#94A3B8" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,12,0" />
+                        <TextBlock Text="{Binding UltimoTrocoFinalizado, StringFormat=R$ {0:N2}}" Foreground="#F59E0B" FontSize="26" FontWeight="Black" VerticalAlignment="Center" />
                     </StackPanel>
                 </Border>
+
+                <!-- ANIMAÇÃO DE SAÍDA DO CARRINHO PARTINDO (DESLOCAMENTO HORIZONTAL COM FADE) -->
+                <Grid Height="60" Width="360" HorizontalAlignment="Center" Margin="0,0,0,12" ClipToBounds="True">
+                    <Path x:Name="DepartingCart"
+                          Data="m498.291 73.215c-5.284-1.574-10.287-2.539-15.145-2.921l9.882-9.35c3.207-3.034 3.347-8.094.312-11.301-3.034-3.206-8.093-3.347-11.301-.312l-11.073 10.477c-.262-5.426-1.272-11.016-3.041-16.958-1.26-4.231-5.712-6.636-9.943-5.379-4.231 1.26-6.64 5.712-5.379 9.943 2.32 7.79 2.977 14.563 1.966 21.256-11.366-6.362-24.844-7.558-37.062-3.43l6.745-11.687c2.326-3.987 2.951-8.65 1.761-13.129-1.191-4.48-4.048-8.218-8.045-10.522-8.26-4.767-18.854-1.926-23.617 6.329l-11.266 19.521c-13.439-2.753-27.382-.313-39.013 6.568-11.449-11.554-27.244-19.012-43.567-20.31-15.89-1.263-31.624 3.269-45.243 12.85v-21.634c0-4.415-3.579-7.994-7.994-7.994h-103.86c-4.415 0-7.994 3.579-7.994 7.994v23.398l-27.009 46.799-4.254-17.622c-4.372-18.088-20.401-30.721-38.979-30.721h-34.214c-12.661 0-22.96 10.301-22.96 22.961s10.3 22.961 22.96 22.961h29.721l54.363 225.208c-21.989 10.569-36.32 32.9-36.32 57.633 0 16.699 6.434 32.516 18.118 44.537 10.241 10.537 23.507 17.125 37.852 18.913 7.407 22.879 28.917 39.476 54.242 39.476 25.127 0 46.492-16.356 54.046-38.976h73.128c7.554 22.619 28.919 38.976 54.046 38.976 31.417 0 56.976-25.56 56.976-56.977s-25.559-56.977-56.976-56.977c-21.264 0-39.833 11.717-49.621 29.026h-81.977c-9.789-17.309-28.357-29.026-49.621-29.026-21.151 0-39.635 11.583-49.473 28.727-8.409-1.51-14.816-8.863-14.816-17.7 0-9.926 8.075-18 18-18h230.825c28.463 0 53.223-18.295 61.61-45.521l43.825-142.113c2.654-6.982 1.73-14.826-2.495-21.053-4.08-6.013-10.729-9.705-17.942-10.031 2.649-2.212 4.874-4.162 6.288-5.576 8.708-8.708 13.503-20.283 13.503-32.593 0-7.968-2.02-15.618-5.797-22.384 6.696-1.014 13.472-.357 21.267 1.965 4.229 1.259 8.683-1.147 9.943-5.38 1.258-4.229-1.151-8.681-5.382-9.941zm-90.092-28.993c.345-.6 1.178-.823 1.781-.472.366.211.519.54.582.779s.094.602-.138.999l-9.87 17.101c-.365-.222-.723-.453-1.094-.667-.377-.218-.761-.413-1.141-.621zm-16.731 31.586c8.982 5.185 15.409 13.557 18.095 23.572 2.687 10.017 1.311 20.479-3.863 29.443-3.065 5.282-9.857 12.278-16.057 18.27h-66.732c.481-2.183.953-4.333 1.412-6.423 5.178-23.604 9.268-42.249 14.115-50.668 5.182-8.979 13.552-15.399 23.567-18.079 10.016-2.682 20.479-1.301 29.463 3.885zm-92.229-17.861c12.032.956 23.676 6.265 32.35 14.517-2.62 2.87-4.98 6.053-7.001 9.554-6.083 10.566-10.193 29.299-15.88 55.227-.696 3.171-1.419 6.464-2.168 9.849h-20.52v-35.036c0-1.402-.369-2.781-1.07-3.996l-12.977-22.484c14.028 5.692 25.512 13.743 29.203 19.846 1.456 2.407 4.059 3.857 6.838 3.857.238 0 .478-.011.717-.032 3.042-.273 5.663-2.257 6.752-5.111 3.518-9.215 3.423-18.063-.282-26.301-3.383-7.519-9.584-14.15-18.73-20.03.957.022 1.883.07 2.768.14zm-90.748 62.104v27.042h-87.846v-27.042zm63.552-56.725c13.733 5.546 23.084 11.963 27.334 18.752-9.629-6.564-21.731-12-33.168-15.378 1.96-1.289 3.908-2.409 5.834-3.374zm-2.011 50.872v32.895h-45.553v-32.894l22.788-39.447zm-30.756-72.978v9.552h-87.875v-9.552zm-91.252 25.54h85.396l-21.549 37.303h-85.376zm222.127 322.044c22.601 0 40.989 18.387 40.989 40.988s-18.388 40.988-40.989 40.988c-22.602 0-40.989-18.387-40.989-40.988s18.388-40.988 40.989-40.988zm-55.702 29.026c-.828 3.859-1.274 7.859-1.274 11.962 0 .675.028 1.343.051 2.013h-67.368c.023-.669.051-1.338.051-2.013 0-4.103-.446-8.103-1.274-11.962zm-125.517-29.026c22.602 0 40.989 18.387 40.989 40.988s-18.388 40.988-40.989 40.988c-22.617 0-41.017-18.387-41.017-40.988s18.4-40.988 41.017-40.988zm274.247-222.673c1.332 1.964 1.602 4.331.741 6.496-.078.197-.148.396-.211.599l-43.909 142.386c-6.31 20.481-24.929 34.242-46.333 34.242h-230.824c-18.741 0-33.987 15.247-33.987 33.988 0 15.571 10.529 28.72 24.839 32.726-1.014 4.247-1.566 8.67-1.566 13.223 0 .263.016.521.02.783-21.217-4.942-37.239-24.24-37.239-46.732 0-20.382 12.993-38.593 32.332-45.315 3.885-1.351 6.11-5.429 5.146-9.427l-57.035-236.267c-.009-.037-.018-.074-.028-.111-1.183-4.61-5.183-7.708-9.954-7.708h-34.213c-3.845 0-6.973-3.128-6.973-6.973s3.128-6.973 6.973-6.973h34.214c11.169 0 20.808 7.603 23.439 18.486l16.271 67.408c.866 3.589 4.078 6.118 7.771 6.118h344.777c2.338.001 4.434 1.112 5.749 3.051zm-9.728-35.888c-.563.563-1.383 1.312-2.411 2.21l-19.9-4.757c-4.291-1.024-8.606 1.622-9.633 5.916-1.026 4.294 1.623 8.606 5.917 9.633l7.938 1.897c-.82.639-1.653 1.286-2.511 1.95h-20.956c3.416-3.879 5.847-7.168 7.643-10.262 7.319-12.68 9.26-27.451 5.467-41.593-1.29-4.808-3.203-9.338-5.648-13.524 11.241-5.33 24.891-3.227 34.098 5.982 5.684 5.673 8.814 13.224 8.814 21.26.001 8.041-3.131 15.601-8.818 21.288zm-108.867-36.711c8.762-15.107 28.2-20.308 43.333-11.59 3.825 2.204 5.14 7.091 2.937 10.917s-7.09 5.143-10.917 2.937c-7.514-4.329-17.17-1.745-21.524 5.758-1.483 2.557-4.166 3.984-6.922 3.984-1.362 0-2.741-.348-4.003-1.08-3.819-2.216-5.119-7.107-2.904-10.926zm92.606 83.494h-317.31c-2.45 0-4.765 1.124-6.281 3.049-1.516 1.926-2.064 4.439-1.49 6.821l12.148 50.334c7.129 29.54 8.41 34.846 22.35 92.562.867 3.589 4.078 6.117 7.77 6.117h219.09c15.521 0 28.5-9.557 33.065-24.346 9.387-30.414 12.068-39.112 16.57-53.721 3.94-12.786 9.276-30.1 21.726-70.467.748-2.425.3-5.061-1.207-7.103s-3.893-3.246-6.431-3.246zm-35.134 94.82h-48.46v-31.662h58.219c-1.548 5.023-2.831 9.186-3.991 12.95-2.031 6.593-3.694 11.986-5.768 18.712zm-64.447 0h-52.667v-31.662h52.667zm-196.192-31.662h58.854v31.662h-51.211c-2.806-11.623-4.775-19.778-7.643-31.662zm74.841 0h52.696v31.662h-52.696zm0-15.989v-31.181h52.696v31.181zm52.697 63.639v32.087h-52.696v-32.087zm15.987 0h52.667v32.087h-52.667zm0-63.639v-31.181h52.667v31.181zm-84.671-31.18v31.181h-62.713l-7.526-31.181zm-47.35 94.819h47.35v32.087h-39.6c-3.222-13.341-5.712-23.648-7.75-32.087zm220.547 32.087h-19.871v-32.087h43.528c-1.632 5.287-3.544 11.484-5.868 19.015-2.489 8.063-9.306 13.072-17.789 13.072zm43.277-95.726h-63.148v-31.181h72.763c-3.936 12.764-7.057 22.885-9.615 31.181zm-227.813 233.547c15.396 0 27.921-12.539 27.921-27.95s-12.525-27.95-27.921-27.95c-15.411 0-27.949 12.539-27.949 27.95s12.538 27.95 27.949 27.95zm0-39.912c6.581 0 11.934 5.366 11.934 11.962s-5.354 11.962-11.934 11.962c-6.596 0-11.962-5.366-11.962-11.962s5.366-11.962 11.962-11.962zm181.219 39.912c15.411 0 27.949-12.539 27.949-27.95s-12.538-27.95-27.949-27.95c-15.396 0-27.921 12.539-27.921 27.95s12.525 27.95 27.921 27.95zm0-39.912c6.596 0 11.962 5.366 11.962 11.962s-5.366 11.962-11.962 11.962c-6.581 0-11.934-5.366-11.934-11.962s5.354-11.962 11.934-11.962z"
+                          Fill="#38BDF8" Width="48" Height="48" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <Path.RenderTransform>
+                            <TranslateTransform x:Name="CartDepartTransform" X="0" Y="0" />
+                        </Path.RenderTransform>
+                        <Path.Triggers>
+                            <EventTrigger RoutedEvent="Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="CartDepartTransform"
+                                                         Storyboard.TargetProperty="X"
+                                                         From="-50" To="350" Duration="0:0:1.4" AccelerationRatio="0.6" />
+                                        <DoubleAnimation Storyboard.TargetName="DepartingCart"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="1.0" To="0.0" Duration="0:0:1.4" AccelerationRatio="0.6" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Path.Triggers>
+                    </Path>
+                </Grid>
 
                 <!-- Status de Transição -->
                 <TextBlock Text="Preparando próximo atendimento..." Foreground="#64748B" FontSize="13" FontStyle="Italic" HorizontalAlignment="Center" />

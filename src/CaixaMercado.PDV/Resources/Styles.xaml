@@ -27,14 +27,14 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
 
-    <!-- Estilo para Botão de Atalhos do Teclado -->
+    <!-- Estilo para Botão de Atalhos do Teclado no Formato Keycap Real -->
     <Style x:Key="ShortcutButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="#1E293B" />
         <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}" />
         <Setter Property="BorderBrush" Value="#334155" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="10,6" />
-        <Setter Property="Margin" Value="2,0" />
+        <Setter Property="BorderThickness" Value="1.5" />
+        <Setter Property="Padding" Value="6,4" />
+        <Setter Property="Margin" Value="3,1" />
         <Setter Property="FontSize" Value="12" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="Template">
@@ -43,17 +43,21 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4"
+                            CornerRadius="5"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#334155" />
-                            <Setter Property="BorderBrush" Value="#475569" />
+                            <Setter Property="Background" Value="#2A3B54" />
+                            <Setter Property="BorderBrush" Value="#3B82F6" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter Property="Background" Value="#0F172A" />
+                            <Setter Property="BorderBrush" Value="#1E3A8A" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.45" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
