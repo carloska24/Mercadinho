@@ -241,11 +241,26 @@ public class MainViewModel : ViewModelBase
         set => SetProperty(ref _isDescontoPercentual, value);
     }
 
-    // Modal ESC Confirmar Cancelar Venda
+    // Estado Venda Concluída (Feedback 2.5s)
+    private bool _isVendaConcluidaVisivel;
+    private decimal _ultimoTrocoFinalizado;
+
     public bool IsModalConfirmarCancelarAberto
     {
         get => _isModalConfirmarCancelarAberto;
         set => SetProperty(ref _isModalConfirmarCancelarAberto, value);
+    }
+
+    public bool IsVendaConcluidaVisivel
+    {
+        get => _isVendaConcluidaVisivel;
+        set => SetProperty(ref _isVendaConcluidaVisivel, value);
+    }
+
+    public decimal UltimoTrocoFinalizado
+    {
+        get => _ultimoTrocoFinalizado;
+        set => SetProperty(ref _ultimoTrocoFinalizado, value);
     }
 
     // Comandos
@@ -333,13 +348,25 @@ public class MainViewModel : ViewModelBase
         if (_vendaService.FinalizarVenda(TipoPagamentoSelecionado, ValorPagoInput, out decimal troco, out string erro))
         {
             TrocoCalculado = troco;
+            UltimoTrocoFinalizado = troco;
             IsModalPagamentoAberto = false;
+            IsVendaConcluidaVisivel = true;
             MensagemStatus = $"VENDA #{VendaAtual.Numero} FINALIZADA COM SUCESSO! TROCO: R$ {troco:N2}";
 
             _vendaService.NovaVenda();
             UltimoItemDescricao = "Venda finalizada com sucesso!";
             UltimoItemTotal = 0m;
             AtualizarDadosVenda();
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(2500);
+                System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+                {
+                    IsVendaConcluidaVisivel = false;
+                    SolicitarFocoEan();
+                });
+            });
         }
         else
         {

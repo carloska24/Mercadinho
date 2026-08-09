@@ -161,6 +161,11 @@
                             <TextBlock Text="{Binding VendaAtual.TotalItens, StringFormat={}{0} item(ns)}" Foreground="#38BDF8" FontSize="13" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" />
                         </DockPanel>
 
+                        <!-- ESTADO DE VENDA CONCLUÍDA COM SUCESSO (FEEDBACK VISUAL 2.5S) -->
+                        <Control Grid.Row="1"
+                                 Template="{StaticResource VendaConcluidaStateTemplate}"
+                                 Visibility="{Binding IsVendaConcluidaVisivel, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
                         <!-- ESTADO VAZIO DE CAIXA LIVRE (EMPTY SALE STATE COM CARRINHO VETORIAL) -->
                         <Control Grid.Row="1"
                                  Template="{StaticResource EmptySaleStateTemplate}"
@@ -215,7 +220,7 @@
                     <StackPanel>
                         <DockPanel Margin="0,0,0,8">
                             <TextBlock Text="RESUMO DA VENDA" Foreground="{StaticResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" />
-                            <Button Content="F6 DESCONTO" Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}" Padding="6,1" FontSize="11" HorizontalAlignment="Right" />
+                            <Button Content="🏷️ F6 DESCONTO" Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}" Padding="6,1" FontSize="11" HorizontalAlignment="Right" />
                         </DockPanel>
 
                         <DockPanel Margin="0,4">
@@ -263,18 +268,18 @@
             </Grid>
         </Grid>
 
-        <!-- 2. BARRA INFERIOR DE ATALHOS DE TECLADO DO OPERADOR -->
+        <!-- 2. BARRA INFERIOR DE ATALHOS DE TECLADO DO OPERADOR COM ÍCONES -->
         <Border Grid.Row="2" Background="#1E293B" BorderBrush="#334155" BorderThickness="0,1,0,1" Padding="12,4">
             <UniformGrid Columns="9" VerticalAlignment="Center">
-                <Button Content="F2 Produto" Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="F3 Cliente" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="F4 Qtd" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="F6 Desconto" Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="F7 Canc Item" Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="F8 Consultar" Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="F9 Pagamento" Command="{Binding AbrirPagamentoCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="ESC Cancelar" Command="{Binding CancelarVendaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
-                <Button Content="DEL Remover" Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="🛒 F2 Produto" Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="👤 F3 Cliente" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="🔢 F4 Qtd" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="🏷️ F6 Desconto" Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="❌ F7 Canc Item" Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="🔍 F8 Consultar" Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="💵 F9 Pagamento" Command="{Binding AbrirPagamentoCommand}" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="🚫 ESC Cancelar" Command="{Binding CancelarVendaCommand}" Style="{StaticResource ShortcutButtonStyle}" />
+                <Button Content="🗑️ DEL Remover" Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}" />
             </UniformGrid>
         </Border>
 
