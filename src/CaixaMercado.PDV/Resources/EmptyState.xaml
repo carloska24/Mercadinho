@@ -68,8 +68,8 @@
                 
                 <!-- Status Operacional -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
-                    <Ellipse Width="10" Height="10" Fill="#34D399" Margin="0,0,8,0" VerticalAlignment="Center" />
-                    <TextBlock Text="SCANNER PRONTO" Foreground="{DynamicResource AccentGreenBrush}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
+                    <Ellipse Width="10" Height="10" Fill="{DynamicResource SuccessForegroundBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock Text="SCANNER PRONTO" Foreground="{DynamicResource SuccessForegroundBrush}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
                 </StackPanel>
 
                 <TextBlock Text="Aproxime o produto do scanner ou digite o código manualmente" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="14" HorizontalAlignment="Center" Margin="0,0,20,0" />

@@ -10,6 +10,8 @@
         Height="768" Width="1280"
         MinHeight="720" MinWidth="1024"
         WindowStartupLocation="CenterScreen"
+        PreviewKeyDown="MainWindow_PreviewKeyDown"
+        PreviewTextInput="MainWindow_PreviewTextInput"
         Background="{DynamicResource WindowBackgroundBrush}">
 
     <Window.DataContext>
@@ -25,7 +27,6 @@
         <KeyBinding Key="F7" Command="{Binding RemoverItemCommand}" />
         <KeyBinding Key="F8" Command="{Binding AtalhoF8Command}" />
         <KeyBinding Key="F9" Command="{Binding AbrirPagamentoCommand}" />
-        <KeyBinding Key="Delete" Command="{Binding RemoverItemCommand}" />
         <KeyBinding Key="Escape" Command="{Binding CancelarVendaCommand}" />
     </Window.InputBindings>
 
@@ -42,7 +43,7 @@
         </Grid.RowDefinitions>
 
         <!-- 0. HEADER SUPERIOR DO SISTEMA DE CAIXA -->
-        <Border Grid.Row="0" Background="{DynamicResource HeaderBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="16,0">
+        <Border Grid.Row="0" IsEnabled="{Binding IsBaseInteractionEnabled}" Background="{DynamicResource HeaderBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,0,0,1" Padding="16,0">
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -83,8 +84,8 @@
 
                     <Border Background="{DynamicResource SuccessContainerBrush}" CornerRadius="4" Padding="10,4" Margin="4,0">
                         <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="8" Height="8" Fill="{DynamicResource AccentGreenBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="CAIXA ABERTO" Foreground="{DynamicResource AccentGreenBrush}" FontSize="12" FontWeight="Bold" />
+                            <Ellipse Width="8" Height="8" Fill="{DynamicResource SuccessForegroundBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="CAIXA ABERTO" Foreground="{DynamicResource SuccessForegroundBrush}" FontSize="12" FontWeight="Bold" />
                         </StackPanel>
                     </Border>
                 </StackPanel>
@@ -92,7 +93,7 @@
         </Border>
 
         <!-- 1. CORPO PRINCIPAL (PAINEL ESQUERDO E DIREITO) -->
-        <Grid Grid.Row="1" Margin="12">
+        <Grid Grid.Row="1" IsEnabled="{Binding IsBaseInteractionEnabled}" Margin="12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="65*" />
                 <ColumnDefinition Width="12" />
@@ -122,8 +123,14 @@
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="QTD (F4)" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,4" />
                             <TextBox x:Name="TxtQuantidadeInput" Text="{Binding QuantidadeInput, UpdateSourceTrigger=PropertyChanged}"
-                                     FontSize="22" FontWeight="Bold" Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource AccentCyanBrush}"
-                                     BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="2" Padding="8,6" HorizontalContentAlignment="Center" />
+                                     Style="{StaticResource PdvTextBoxStyle}"
+                                     AutomationProperties.Name="Quantidade do próximo produto"
+                                     FontSize="22" FontWeight="Bold" Foreground="{DynamicResource AccentCyanBrush}"
+                                     HorizontalContentAlignment="Center">
+                                <TextBox.InputBindings>
+                                    <KeyBinding Key="Return" Command="{Binding SolicitarFocoEanCommand}" />
+                                </TextBox.InputBindings>
+                            </TextBox>
                         </StackPanel>
 
                         <!-- EAN / Código de Barras / PLU -->
@@ -131,6 +138,7 @@
                             <TextBlock Text="CÓDIGO DE BARRAS / EAN / PLU (DIGITE OU LEIA NO SCANNER)" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,4" />
                             <TextBox x:Name="TxtEanInput"
                                      Text="{Binding EanInput, UpdateSourceTrigger=PropertyChanged}"
+                                     AutomationProperties.Name="Código de barras, EAN ou PLU"
                                      Style="{StaticResource EanTextBoxStyle}">
                                 <TextBox.InputBindings>
                                     <KeyBinding Key="Return" Command="{Binding AdicionarItemCommand}" />
@@ -139,8 +147,9 @@
                         </StackPanel>
 
                         <!-- Botão Adicionar -->
-                        <Button Grid.Column="4" Content="ENTER ↵" Command="{Binding AdicionarItemCommand}"
-                                Background="{DynamicResource AccentBlueBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="16" FontWeight="Bold"
+                        <Button x:Name="BtnAdicionarProduto" Grid.Column="4" Content="ENTER ↵" Command="{Binding AdicionarItemCommand}"
+                                Style="{StaticResource BlueActionButtonStyle}" AutomationProperties.Name="Adicionar produto"
+                                FontSize="16" FontWeight="Bold"
                                 Padding="20,0" VerticalAlignment="Bottom" Height="50" />
                     </Grid>
                 </Border>
@@ -148,7 +157,7 @@
                 <!-- Dica EAN e Filtro F2 -->
                 <Border Grid.Row="1" Background="{DynamicResource SurfaceRaisedBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,4" Margin="0,0,0,10">
                     <DockPanel>
-                        <Button Content="🔍 F2 CONSULTAR PRODUTOS" Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" DockPanel.Dock="Right" Padding="8,2" />
+                        <Button x:Name="BtnConsultarProdutosTopo" Content="F2 CONSULTAR PRODUTOS" Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F2 consultar produtos" DockPanel.Dock="Right" Padding="8,2" />
                         <TextBlock Foreground="{DynamicResource SecondaryTextBrush}" FontSize="11" VerticalAlignment="Center">
                             <Run Text="Dicas de teste: " FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" />
                             <Run Text="7891234567890 (Arroz)" /> | 
@@ -175,6 +184,8 @@
                         <!-- ESTADO DE VENDA CONCLUÍDA COM SUCESSO (FEEDBACK VISUAL 2.5S COM CARRINHO PARTINDO) -->
                         <Control Grid.Row="1"
                                  Template="{StaticResource VendaConcluidaStateTemplate}"
+                                 AutomationProperties.Name="Venda finalizada com sucesso"
+                                 AutomationProperties.LiveSetting="Assertive"
                                  Visibility="{Binding IsVendaConcluidaVisivel, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
                         <!-- ESTADO VAZIO DE CAIXA LIVRE (EMPTY SALE STATE COM CARRINHO VETORIAL - EXIBIDO SOMENTE QUANDO NÃO HÁ ITENS E A VENDA NÃO FOI RECÉM CONCLUÍDA) -->
@@ -184,6 +195,8 @@
 
                         <!-- DATAGRID DE ITENS DO CUPOM DA VENDA -->
                         <DataGrid Grid.Row="1"
+                                  x:Name="GridItensVenda"
+                                  AutomationProperties.Name="Itens da venda"
                                   ItemsSource="{Binding Itens}"
                                   SelectedItem="{Binding ItemSelecionado, Mode=TwoWay}"
                                   Style="{StaticResource PdvDataGridStyle}"
@@ -196,7 +209,7 @@
                                 <DataGridTextColumn Header="UN" Binding="{Binding Unidade}" Width="50" />
                                 <DataGridTextColumn Header="UNITÁRIO R$" Binding="{Binding PrecoUnitario, StringFormat={}{0:N2}}" Width="105" />
                                 <DataGridTextColumn Header="DESC R$" Binding="{Binding Desconto, StringFormat={}{0:N2}}" Width="85" />
-                                <DataGridTextColumn Header="TOTAL R$" Binding="{Binding Total, StringFormat={}{0:N2}}" Width="115" FontWeight="Bold" Foreground="{DynamicResource AccentGreenBrush}" />
+                                <DataGridTextColumn Header="TOTAL R$" Binding="{Binding Total, StringFormat={}{0:N2}}" Width="115" ElementStyle="{StaticResource PdvMoneyCellTextStyle}" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
@@ -231,7 +244,7 @@
                     <StackPanel>
                         <DockPanel Margin="0,0,0,8">
                             <TextBlock Text="RESUMO DA VENDA" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" />
-                            <Button Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}" Padding="6,1" FontSize="11" HorizontalAlignment="Right">
+                            <Button x:Name="BtnDescontoResumo" Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F6 aplicar desconto" Padding="6,1" FontSize="11" HorizontalAlignment="Right">
                                 <StackPanel Orientation="Horizontal">
                                     <Path Data="M 21.41 11.58 l -9 -9 C 12.05 2.22 11.55 2 11 2 H 4 C 2.9 2 2 2.9 2 4 v 7 c 0 0.55 0.22 1.05 0.59 1.42 l 9 9 c 0.36 0.36 0.86 0.58 1.41 0.58 s 1.05 -0.22 1.41 -0.59 l 7 -7 c 0.37 -0.36 0.59 -0.86 0.59 -1.41 s -0.23 -1.06 -0.59 -1.42 z M 5.5 7 C 4.67 7 4 6.33 4 5.5 S 4.67 4 5.5 4 S 7 4.67 7 5.5 S 6.33 7 5.5 7 z"
                                           Fill="{DynamicResource AccentYellowBrush}" Width="12" Height="12" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
@@ -277,9 +290,10 @@
                 </Border>
 
                 <!-- BOTÃO DE AÇÃO F9 PAGAMENTO -->
-                <Button Grid.Row="5"
+                <Button x:Name="BtnPagamentoPrincipal" Grid.Row="5"
                         Command="{Binding AbrirPagamentoCommand}"
                         Style="{StaticResource PrimaryActionButtonStyle}"
+                        AutomationProperties.Name="F9 abrir pagamento"
                         Height="60">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Path Data="M 20 4 H 4 c -1.11 0 -1.99 .89 -1.99 2 L 2 18 c 0 1.11 .89 2 2 2 h 16 c 1.11 0 2 -.89 2 -2 V 6 c 0 -1.11 -.89 -2 -2 -2 z m 0 14 H 4 v -6 h 16 v 6 z m 0 -10 H 4 V 6 h 16 v 2 z"
@@ -291,7 +305,7 @@
         </Grid>
 
         <!-- 2. BARRA INFERIOR DE ATALHOS DE TECLADO DO OPERADOR COM BOTÕES ESTILO KEYCAP E ÍCONES VETORIAIS PHOSPHOR (SEM EMOJIS) -->
-        <Border Grid.Row="2" Background="{DynamicResource SaleAreaBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,1,0,1" Padding="6,4">
+        <Border Grid.Row="2" IsEnabled="{Binding IsBaseInteractionEnabled}" Background="{DynamicResource SaleAreaBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,1,0,1" Padding="6,4">
             <UniformGrid Columns="9" VerticalAlignment="Center">
                 <!-- F2 PRODUTO (ShoppingCart) -->
                 <Button Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F2 Produto">
@@ -404,7 +418,7 @@
         </Border>
 
         <!-- 3. BARRA DE STATUS FOOTER -->
-        <Border Grid.Row="3" Background="{DynamicResource SaleAreaBackgroundBrush}" Padding="16,0">
+        <Border Grid.Row="3" IsEnabled="{Binding IsBaseInteractionEnabled}" Background="{DynamicResource SaleAreaBackgroundBrush}" Padding="16,0">
             <Grid VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -416,7 +430,7 @@
                     <TextBlock Text="{Binding VendaAtual.Numero}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,16,0" />
 
                     <TextBlock Text="STATUS: " Foreground="{DynamicResource MutedTextBrush}" FontSize="12" />
-                    <TextBlock Text="{Binding MensagemStatus}" Foreground="{DynamicResource AccentYellowBrush}" FontSize="12" FontWeight="Bold" />
+                    <TextBlock x:Name="TxtStatusOperacao" Text="{Binding MensagemStatus}" AutomationProperties.Name="{Binding MensagemStatus}" AutomationProperties.LiveSetting="Polite" Foreground="{DynamicResource AccentYellowBrush}" FontSize="12" FontWeight="Bold" />
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
@@ -429,7 +443,8 @@
         </Border>
 
         <!-- MODAL F2: CONSULTA DE PRODUTOS ERP -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalConsultaAberta, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{DynamicResource OverlayBackgroundBrush}"
+        <GroupBox x:Name="ModalConsultaProdutos" Grid.RowSpan="4" Visibility="{Binding IsModalConsultaAberta, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ModalOverlayStyle}"
+              AutomationProperties.Name="Diálogo de consulta de produtos" AutomationProperties.HelpText="Pesquise, selecione e adicione um produto à venda"
               FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="2" CornerRadius="8" Width="750" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
                 <Grid>
@@ -442,7 +457,7 @@
 
                     <DockPanel Grid.Row="0" Margin="0,0,0,12">
                         <TextBlock Text="CONSULTA DE PRODUTOS (F2)" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="18" FontWeight="Bold" />
-                        <Button Content="FECHAR — ESC" Command="{Binding FecharModalConsultaCommand}" Background="Transparent" Foreground="{DynamicResource SecondaryTextBrush}" BorderThickness="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Cursor="Hand" />
+                        <Button x:Name="BtnFecharConsulta" Content="FECHAR — ESC" Command="{Binding FecharModalConsultaCommand}" Style="{StaticResource GhostButtonStyle}" AutomationProperties.Name="Fechar consulta de produtos" FontSize="14" HorizontalAlignment="Right" />
                     </DockPanel>
 
                     <!-- Filtro de busca -->
@@ -452,12 +467,14 @@
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox x:Name="TxtFiltroConsulta" Grid.Column="0" Text="{Binding FiltroConsulta, UpdateSourceTrigger=PropertyChanged}" FontSize="16" Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource PrimaryTextBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="2" Padding="8,4" VerticalContentAlignment="Center" />
-                        <Button Grid.Column="2" Content="PESQUISAR" Command="{Binding FiltrarProdutosCommand}" Background="{DynamicResource AccentBlueBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontWeight="Bold" Padding="16,8" />
+                        <TextBox x:Name="TxtFiltroConsulta" Grid.Column="0" Text="{Binding FiltroConsulta, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource PdvTextBoxStyle}" AutomationProperties.Name="Pesquisar produto por código ou descrição" FontSize="16" Padding="8,4" />
+                        <Button x:Name="BtnPesquisarProduto" Grid.Column="2" Content="PESQUISAR" Command="{Binding FiltrarProdutosCommand}" Style="{StaticResource BlueActionButtonStyle}" AutomationProperties.Name="Pesquisar produtos" Padding="16,8" />
                     </Grid>
 
                     <!-- Tabela de Produtos -->
                     <DataGrid Grid.Row="2"
+                              x:Name="GridProdutosConsulta"
+                              AutomationProperties.Name="Resultados da consulta de produtos"
                               ItemsSource="{Binding ProdutosConsulta}"
                               SelectedItem="{Binding ProdutoConsultaSelecionado, Mode=TwoWay}"
                               Style="{StaticResource PdvDataGridStyle}"
@@ -467,37 +484,36 @@
                             <DataGridTextColumn Header="EAN" Binding="{Binding EAN}" Width="130" />
                             <DataGridTextColumn Header="DESCRIÇÃO DO PRODUTO" Binding="{Binding Descricao}" Width="*" />
                             <DataGridTextColumn Header="UN" Binding="{Binding Unidade}" Width="50" />
-                            <DataGridTextColumn Header="PREÇO R$" Binding="{Binding PrecoVenda, StringFormat={}{0:N2}}" Width="100" FontWeight="Bold" Foreground="{DynamicResource AccentGreenBrush}" />
+                            <DataGridTextColumn Header="PREÇO R$" Binding="{Binding PrecoVenda, StringFormat={}{0:N2}}" Width="100" ElementStyle="{StaticResource PdvMoneyCellTextStyle}" />
                             <DataGridTextColumn Header="ESTOQUE" Binding="{Binding Estoque, StringFormat={}{0:N2}}" Width="90" />
                         </DataGrid.Columns>
                     </DataGrid>
 
                     <!-- Botões de Ação -->
                     <UniformGrid Grid.Row="3" Columns="2">
-                        <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalConsultaCommand}" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
-                        <Button Content="ADICIONAR SELECIONADO (ENTER)" Command="{Binding AdicionarProdutoConsultaCommand}" IsDefault="True" Background="{DynamicResource SuccessActionBackgroundBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
+                        <Button x:Name="BtnCancelarConsulta" Content="CANCELAR (ESC)" Command="{Binding FecharModalConsultaCommand}" Style="{StaticResource NeutralButtonStyle}" AutomationProperties.Name="Cancelar consulta" FontSize="14" Padding="10" Margin="0,0,6,0" />
+                        <Button x:Name="BtnAdicionarProdutoConsulta" Content="ADICIONAR SELECIONADO (ENTER)" Command="{Binding AdicionarProdutoConsultaCommand}" IsDefault="True" Style="{StaticResource SuccessActionButtonStyle}" AutomationProperties.Name="Adicionar produto selecionado" FontSize="14" Padding="10" Margin="6,0,0,0" />
                     </UniformGrid>
                 </Grid>
             </Border>
-        </Grid>
+        </GroupBox>
 
         <!-- MODAL F3: IDENTIFICAÇÃO SIMPLES DO CLIENTE -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalClienteAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{DynamicResource OverlayBackgroundBrush}"
+        <GroupBox x:Name="ModalIdentificarCliente" Grid.RowSpan="4" Visibility="{Binding IsModalClienteAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ModalOverlayStyle}"
+              AutomationProperties.Name="Diálogo de identificação do cliente"
               FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="2" CornerRadius="8" Width="520" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
                 <StackPanel>
                     <DockPanel Margin="0,0,0,16">
                         <TextBlock Text="IDENTIFICAR CLIENTE (F3)" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="18" FontWeight="Bold" />
-                        <Button Content="FECHAR — ESC" Command="{Binding FecharModalClienteCommand}" Background="Transparent" Foreground="{DynamicResource SecondaryTextBrush}" BorderThickness="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Cursor="Hand" />
+                        <Button x:Name="BtnFecharCliente" Content="FECHAR — ESC" Command="{Binding FecharModalClienteCommand}" Style="{StaticResource GhostButtonStyle}" AutomationProperties.Name="Fechar identificação do cliente" FontSize="14" HorizontalAlignment="Right" />
                     </DockPanel>
 
                     <TextBlock Text="NOME DO CLIENTE:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
                     <TextBox x:Name="TxtClienteNome"
                              Text="{Binding ClienteNomeInput, UpdateSourceTrigger=PropertyChanged}"
-                             Background="{DynamicResource InputBackgroundBrush}"
-                             Foreground="{DynamicResource PrimaryTextBrush}"
-                             BorderBrush="{DynamicResource AccentBlueBrush}"
-                             BorderThickness="2"
+                             Style="{StaticResource PdvTextBoxStyle}"
+                             AutomationProperties.Name="Nome do cliente"
                              FontSize="18"
                              Padding="10,7"
                              Margin="0,0,0,8" />
@@ -507,64 +523,67 @@
                                Margin="0,0,0,16" />
 
                     <UniformGrid Columns="2">
-                        <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalClienteCommand}" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
-                        <Button Content="CONFIRMAR (ENTER)" Command="{Binding ConfirmarClienteCommand}" IsDefault="True" Background="{DynamicResource AccentBlueBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
+                        <Button x:Name="BtnCancelarCliente" Content="CANCELAR (ESC)" Command="{Binding FecharModalClienteCommand}" Style="{StaticResource NeutralButtonStyle}" AutomationProperties.Name="Cancelar identificação do cliente" FontSize="14" Padding="10" Margin="0,0,6,0" />
+                        <Button x:Name="BtnConfirmarCliente" Content="CONFIRMAR (ENTER)" Command="{Binding ConfirmarClienteCommand}" IsDefault="True" Style="{StaticResource BlueActionButtonStyle}" AutomationProperties.Name="Confirmar cliente" FontSize="14" Padding="10" Margin="6,0,0,0" />
                     </UniformGrid>
                 </StackPanel>
             </Border>
-        </Grid>
+        </GroupBox>
 
         <!-- MODAL F6: DESCONTO DA VENDA -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalDescontoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{DynamicResource OverlayBackgroundBrush}"
+        <GroupBox x:Name="ModalDesconto" Grid.RowSpan="4" Visibility="{Binding IsModalDescontoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ModalOverlayStyle}"
+              AutomationProperties.Name="Diálogo de desconto da venda"
               FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource AccentYellowBrush}" BorderThickness="2" CornerRadius="8" Width="450" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
                 <StackPanel>
                     <DockPanel Margin="0,0,0,16">
                         <TextBlock Text="APLICAR DESCONTO (F6)" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="18" FontWeight="Bold" />
-                        <Button Content="FECHAR — ESC" Command="{Binding FecharModalDescontoCommand}" Background="Transparent" Foreground="{DynamicResource SecondaryTextBrush}" BorderThickness="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Cursor="Hand" />
+                        <Button x:Name="BtnFecharDesconto" Content="FECHAR — ESC" Command="{Binding FecharModalDescontoCommand}" Style="{StaticResource GhostButtonStyle}" AutomationProperties.Name="Fechar desconto" FontSize="14" HorizontalAlignment="Right" />
                     </DockPanel>
 
                     <TextBlock Text="TIPO DE DESCONTO:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,8" />
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                        <RadioButton Content="Valor Fixo R$" IsChecked="{Binding IsDescontoValorFixo}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Margin="0,0,20,0" />
-                        <RadioButton Content="Percentual %" IsChecked="{Binding IsDescontoPercentual}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" />
+                        <RadioButton x:Name="RdoDescontoFixo" Content="Valor Fixo R$" GroupName="TipoDesconto" IsChecked="{Binding IsDescontoValorFixo}" Style="{StaticResource PdvRadioButtonStyle}" AutomationProperties.Name="Desconto em valor fixo" FontSize="14" Margin="0,0,20,0" />
+                        <RadioButton x:Name="RdoDescontoPercentual" Content="Percentual %" GroupName="TipoDesconto" IsChecked="{Binding IsDescontoPercentual}" Style="{StaticResource PdvRadioButtonStyle}" AutomationProperties.Name="Desconto percentual" FontSize="14" />
                     </StackPanel>
 
                     <TextBlock Text="VALOR DO DESCONTO:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
-                    <TextBox x:Name="TxtValorDesconto" Text="{Binding ValorDescontoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" FontSize="24" FontWeight="Bold" Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource AccentYellowBrush}" BorderBrush="{DynamicResource AccentYellowBrush}" BorderThickness="2" Padding="10,6" Margin="0,0,0,16" />
+                    <TextBox x:Name="TxtValorDesconto" Text="{Binding ValorDescontoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" Style="{StaticResource PdvTextBoxStyle}" AutomationProperties.Name="Valor do desconto" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" Padding="10,6" Margin="0,0,0,16" />
 
                     <UniformGrid Columns="2">
-                        <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalDescontoCommand}" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
-                        <Button Content="APLICAR (ENTER)" Command="{Binding ConfirmarDescontoCommand}" IsDefault="True" Background="{DynamicResource AccentYellowBrush}" Foreground="{DynamicResource OnWarningTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
+                        <Button x:Name="BtnCancelarDesconto" Content="CANCELAR (ESC)" Command="{Binding FecharModalDescontoCommand}" Style="{StaticResource NeutralButtonStyle}" AutomationProperties.Name="Cancelar desconto" FontSize="14" Padding="10" Margin="0,0,6,0" />
+                        <Button x:Name="BtnAplicarDesconto" Content="APLICAR (ENTER)" Command="{Binding ConfirmarDescontoCommand}" IsDefault="True" Style="{StaticResource WarningActionButtonStyle}" AutomationProperties.Name="Aplicar desconto" FontSize="14" Padding="10" Margin="6,0,0,0" />
                     </UniformGrid>
                 </StackPanel>
             </Border>
-        </Grid>
+        </GroupBox>
 
         <!-- MODAL ESC: CONFIRMAÇÃO DE CANCELAMENTO DE VENDA -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalConfirmarCancelarAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{DynamicResource OverlayBackgroundBrush}"
+        <GroupBox x:Name="ModalCancelarVenda" Grid.RowSpan="4" Visibility="{Binding IsModalConfirmarCancelarAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ModalOverlayStyle}"
+              AutomationProperties.Name="Diálogo de confirmação do cancelamento da venda"
               FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource AccentRedBrush}" BorderThickness="2" CornerRadius="8" Width="450" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
                 <StackPanel>
-                    <TextBlock Text="CANCELAR VENDA COMPLETA?" Foreground="{DynamicResource AccentRedBrush}" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" HorizontalAlignment="Center" />
+                    <TextBlock Text="CANCELAR VENDA COMPLETA?" Foreground="{DynamicResource DangerForegroundBrush}" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" HorizontalAlignment="Center" />
                     <TextBlock Text="Todos os itens registrados na venda atual serão removidos. Deseja realmente cancelar?" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,20" TextAlignment="Center" />
 
                     <UniformGrid Columns="2">
-                        <Button x:Name="BtnNaoCancelarVenda" Content="NÃO (ESC)" Command="{Binding FecharModalCancelarVendaCommand}" IsDefault="True" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
-                        <Button Content="SIM, CANCELAR" Command="{Binding ConfirmarCancelarVendaCommand}" Background="{DynamicResource AccentRedBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
+                        <Button x:Name="BtnNaoCancelarVenda" Content="NÃO (ESC)" Command="{Binding FecharModalCancelarVendaCommand}" IsDefault="True" Style="{StaticResource NeutralButtonStyle}" AutomationProperties.Name="Não cancelar a venda" FontSize="14" Padding="10" Margin="0,0,6,0" />
+                        <Button x:Name="BtnConfirmarCancelarVenda" Content="SIM, CANCELAR" Command="{Binding ConfirmarCancelarVendaCommand}" Style="{StaticResource DangerActionButtonStyle}" AutomationProperties.Name="Confirmar cancelamento da venda" FontSize="14" Padding="10" Margin="6,0,0,0" />
                     </UniformGrid>
                 </StackPanel>
             </Border>
-        </Grid>
+        </GroupBox>
 
         <!-- MODAL F9: FINALIZAR PAGAMENTO -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalPagamentoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{DynamicResource OverlayBackgroundBrush}"
+        <GroupBox x:Name="ModalPagamento" Grid.RowSpan="4" Visibility="{Binding IsModalPagamentoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Style="{StaticResource ModalOverlayStyle}"
+              AutomationProperties.Name="Diálogo de finalização do pagamento"
               FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="2" CornerRadius="8" Width="550" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="24">
                 <StackPanel>
                     <DockPanel Margin="0,0,0,16">
                         <TextBlock Text="FINALIZAR PAGAMENTO (F9)" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
-                        <Button Content="FECHAR — ESC" Command="{Binding FecharModalPagamentoCommand}" Background="Transparent" Foreground="{DynamicResource SecondaryTextBrush}" BorderThickness="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Cursor="Hand" />
+                        <Button x:Name="BtnFecharPagamento" Content="FECHAR — ESC" Command="{Binding FecharModalPagamentoCommand}" Style="{StaticResource GhostButtonStyle}" AutomationProperties.Name="Fechar pagamento" FontSize="14" HorizontalAlignment="Right" />
                     </DockPanel>
 
                     <!-- Total a Pagar no Modal -->
@@ -578,10 +597,10 @@
                     <!-- Seleção Forma de Pagamento com Atalhos F1-F4 -->
                     <TextBlock Text="FORMA DE PAGAMENTO:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
                     <UniformGrid Columns="4" Margin="0,0,0,16">
-                        <Button Content="💵 F1 Dinheiro" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.Dinheiro}" Style="{StaticResource ShortcutButtonStyle}" Margin="2" Padding="4,8" />
-                        <Button Content="📱 F2 PIX" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.Pix}" Style="{StaticResource ShortcutButtonStyle}" Margin="2" Padding="4,8" />
-                        <Button Content="💳 F3 Débito" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.CartaoDebito}" Style="{StaticResource ShortcutButtonStyle}" Margin="2" Padding="4,8" />
-                        <Button Content="💳 F4 Crédito" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.CartaoCredito}" Style="{StaticResource ShortcutButtonStyle}" Margin="2" Padding="4,8" />
+                        <RadioButton x:Name="BtnPagamentoDinheiro" Content="F1  Dinheiro" GroupName="FormaPagamento" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.Dinheiro}" IsChecked="{Binding IsPagamentoDinheiroSelecionado, Mode=TwoWay}" Style="{StaticResource PaymentMethodRadioStyle}" AutomationProperties.Name="F1 Dinheiro" />
+                        <RadioButton x:Name="BtnPagamentoPix" Content="F2  PIX" GroupName="FormaPagamento" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.Pix}" IsChecked="{Binding IsPagamentoPixSelecionado, Mode=TwoWay}" Style="{StaticResource PaymentMethodRadioStyle}" AutomationProperties.Name="F2 PIX" />
+                        <RadioButton x:Name="BtnPagamentoDebito" Content="F3  Débito" GroupName="FormaPagamento" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.CartaoDebito}" IsChecked="{Binding IsPagamentoDebitoSelecionado, Mode=TwoWay}" Style="{StaticResource PaymentMethodRadioStyle}" AutomationProperties.Name="F3 Débito" />
+                        <RadioButton x:Name="BtnPagamentoCredito" Content="F4  Crédito" GroupName="FormaPagamento" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.CartaoCredito}" IsChecked="{Binding IsPagamentoCreditoSelecionado, Mode=TwoWay}" Style="{StaticResource PaymentMethodRadioStyle}" AutomationProperties.Name="F4 Crédito" />
                     </UniformGrid>
 
                     <!-- Forma Selecionada -->
@@ -592,7 +611,7 @@
 
                     <!-- Campo Valor Recebido -->
                     <TextBlock Text="VALOR RECEBIDO R$:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
-                    <TextBox x:Name="TxtValorPago" Text="{Binding ValorPagoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" FontSize="24" FontWeight="Bold" Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource AccentYellowBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="2" Padding="10,6" Margin="0,0,0,16" />
+                    <TextBox x:Name="TxtValorPago" Text="{Binding ValorPagoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" Style="{StaticResource PdvTextBoxStyle}" AutomationProperties.Name="Valor recebido" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" Padding="10,6" Margin="0,0,0,16" />
 
                     <!-- Troco Calculado -->
                     <Border Background="{DynamicResource SaleAreaBackgroundBrush}" CornerRadius="6" Padding="12" Margin="0,0,0,16">
@@ -603,15 +622,15 @@
                     </Border>
 
                     <!-- Mensagem Erro Modal -->
-                    <TextBlock Text="{Binding MensagemErroModal}" Foreground="{DynamicResource AccentRedBrush}" FontSize="13" FontWeight="Bold" Visibility="{Binding HasMensagemErroModal, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,10" HorizontalAlignment="Center" />
+                    <TextBlock x:Name="TxtErroPagamento" Text="{Binding MensagemErroModal}" Foreground="{DynamicResource DangerForegroundBrush}" AutomationProperties.Name="{Binding MensagemErroModal}" AutomationProperties.LiveSetting="Assertive" FontSize="13" FontWeight="Bold" Visibility="{Binding HasMensagemErroModal, Converter={StaticResource BooleanToVisibilityConverter}}" Margin="0,0,0,10" HorizontalAlignment="Center" />
 
                     <!-- Botões Ação Modal -->
                     <UniformGrid Columns="2">
-                        <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalPagamentoCommand}" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="12" Margin="0,0,6,0" />
-                        <Button Content="CONFIRMAR (ENTER)" Command="{Binding ConfirmarPagamentoCommand}" IsDefault="True" Background="{DynamicResource SuccessActionBackgroundBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="12" Margin="6,0,0,0" />
+                        <Button x:Name="BtnCancelarPagamento" Content="CANCELAR (ESC)" Command="{Binding FecharModalPagamentoCommand}" Style="{StaticResource NeutralButtonStyle}" AutomationProperties.Name="Cancelar pagamento" FontSize="14" Padding="12" Margin="0,0,6,0" />
+                        <Button x:Name="BtnConfirmarPagamento" Content="CONFIRMAR (ENTER)" Command="{Binding ConfirmarPagamentoCommand}" IsDefault="True" Style="{StaticResource SuccessActionButtonStyle}" AutomationProperties.Name="Confirmar pagamento" FontSize="14" Padding="12" Margin="6,0,0,0" />
                     </UniformGrid>
                 </StackPanel>
             </Border>
-        </Grid>
+        </GroupBox>
     </Grid>
 </Window>

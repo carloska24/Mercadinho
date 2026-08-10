@@ -15,6 +15,7 @@ public class MainViewModel : ViewModelBase
     // Foco para a View
     public event Action? RequestFocusEan;
     public event Action? RequestFocusQuantidade;
+    public event Action? RequestFocusPagamento;
 
     private string _eanInput = string.Empty;
     private decimal _quantidadeInput = 1m;
@@ -171,6 +172,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isModalPagamentoAberto, value))
             {
                 OnPropertyChanged(nameof(TemModalAberto));
+                OnPropertyChanged(nameof(IsBaseInteractionEnabled));
                 (SelecionarFormaPagamentoCommand as RelayCommand)?.RaiseCanExecuteChanged();
                 (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
@@ -198,7 +200,38 @@ public class MainViewModel : ViewModelBase
     public TipoPagamento TipoPagamentoSelecionado
     {
         get => _tipoPagamentoSelecionado;
-        set => SetProperty(ref _tipoPagamentoSelecionado, value);
+        set
+        {
+            SetProperty(ref _tipoPagamentoSelecionado, value);
+            OnPropertyChanged(nameof(IsPagamentoDinheiroSelecionado));
+            OnPropertyChanged(nameof(IsPagamentoPixSelecionado));
+            OnPropertyChanged(nameof(IsPagamentoDebitoSelecionado));
+            OnPropertyChanged(nameof(IsPagamentoCreditoSelecionado));
+        }
+    }
+
+    public bool IsPagamentoDinheiroSelecionado
+    {
+        get => TipoPagamentoSelecionado == TipoPagamento.Dinheiro;
+        set { if (value) TipoPagamentoSelecionado = TipoPagamento.Dinheiro; }
+    }
+
+    public bool IsPagamentoPixSelecionado
+    {
+        get => TipoPagamentoSelecionado == TipoPagamento.Pix;
+        set { if (value) TipoPagamentoSelecionado = TipoPagamento.Pix; }
+    }
+
+    public bool IsPagamentoDebitoSelecionado
+    {
+        get => TipoPagamentoSelecionado == TipoPagamento.CartaoDebito;
+        set { if (value) TipoPagamentoSelecionado = TipoPagamento.CartaoDebito; }
+    }
+
+    public bool IsPagamentoCreditoSelecionado
+    {
+        get => TipoPagamentoSelecionado == TipoPagamento.CartaoCredito;
+        set { if (value) TipoPagamentoSelecionado = TipoPagamento.CartaoCredito; }
     }
 
     public string MensagemErroModal
@@ -224,6 +257,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isModalConsultaAberta, value))
             {
                 OnPropertyChanged(nameof(TemModalAberto));
+                OnPropertyChanged(nameof(IsBaseInteractionEnabled));
                 (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
@@ -262,6 +296,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isModalDescontoAberto, value))
             {
                 OnPropertyChanged(nameof(TemModalAberto));
+                OnPropertyChanged(nameof(IsBaseInteractionEnabled));
                 (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
@@ -309,6 +344,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isModalConfirmarCancelarAberto, value))
             {
                 OnPropertyChanged(nameof(TemModalAberto));
+                OnPropertyChanged(nameof(IsBaseInteractionEnabled));
                 (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
@@ -322,6 +358,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isModalClienteAberto, value))
             {
                 OnPropertyChanged(nameof(TemModalAberto));
+                OnPropertyChanged(nameof(IsBaseInteractionEnabled));
                 (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
@@ -335,6 +372,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isVendaConcluidaVisivel, value))
             {
                 OnPropertyChanged(nameof(IsCaixaLivreVisivel));
+                OnPropertyChanged(nameof(IsBaseInteractionEnabled));
             }
         }
     }
@@ -376,8 +414,11 @@ public class MainViewModel : ViewModelBase
         || IsModalConfirmarCancelarAberto
         || IsModalClienteAberto;
 
+    public bool IsBaseInteractionEnabled => !TemModalAberto && !IsVendaConcluidaVisivel;
+
     private void ExecutarAdicionarItem()
     {
+        if (TemModalAberto || IsVendaConcluidaVisivel) return;
         if (string.IsNullOrWhiteSpace(EanInput)) return;
 
         try
@@ -441,6 +482,7 @@ public class MainViewModel : ViewModelBase
 
         ValorPagoInput = VendaAtual.Total;
         TrocoCalculado = 0m;
+        TipoPagamentoSelecionado = TipoPagamento.Dinheiro;
         MensagemErroModal = string.Empty;
         MensagemStatus = "AGUARDANDO PAGAMENTO — F1 DINHEIRO | F2 PIX | F3 DÉBITO | F4 CRÉDITO";
         IsModalPagamentoAberto = true;
@@ -474,6 +516,7 @@ public class MainViewModel : ViewModelBase
         else
         {
             MensagemErroModal = erro;
+            RequestFocusPagamento?.Invoke();
         }
     }
 
@@ -580,7 +623,7 @@ public class MainViewModel : ViewModelBase
             return;
         }
 
-        if (IsModalConsultaAberta || IsModalDescontoAberto || IsModalConfirmarCancelarAberto)
+        if (TemModalAberto || IsVendaConcluidaVisivel)
         {
             return;
         }
@@ -598,7 +641,7 @@ public class MainViewModel : ViewModelBase
             return;
         }
 
-        if (TemModalAberto) return;
+        if (TemModalAberto || IsVendaConcluidaVisivel) return;
 
         ClienteNomeInput = ClienteNome == "CONSUMIDOR NÃO IDENTIFICADO"
             ? string.Empty
@@ -614,14 +657,14 @@ public class MainViewModel : ViewModelBase
             return;
         }
 
-        if (TemModalAberto) return;
+        if (TemModalAberto || IsVendaConcluidaVisivel) return;
 
         RequestFocusQuantidade?.Invoke();
     }
 
     private void ExecutarAtalhoF8()
     {
-        if (TemModalAberto) return;
+        if (TemModalAberto || IsVendaConcluidaVisivel) return;
         ExecutarAbrirConsulta();
     }
 
@@ -693,7 +736,7 @@ public class MainViewModel : ViewModelBase
 
     private void SolicitarFocoEan()
     {
-        if (TemModalAberto) return;
+        if (TemModalAberto || IsVendaConcluidaVisivel) return;
         RequestFocusEan?.Invoke();
     }
 

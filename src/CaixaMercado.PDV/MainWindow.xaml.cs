@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CaixaMercado.PDV.Services;
@@ -29,6 +30,7 @@ public partial class MainWindow : Window
             _viewModel = vm;
             vm.RequestFocusEan += FocarCampoEan;
             vm.RequestFocusQuantidade += FocarCampoQuantidade;
+            vm.RequestFocusPagamento += FocarCampoPagamento;
             vm.PropertyChanged += MainViewModel_PropertyChanged;
         }
 
@@ -47,6 +49,7 @@ public partial class MainWindow : Window
 
         _viewModel.RequestFocusEan -= FocarCampoEan;
         _viewModel.RequestFocusQuantidade -= FocarCampoQuantidade;
+        _viewModel.RequestFocusPagamento -= FocarCampoPagamento;
         _viewModel.PropertyChanged -= MainViewModel_PropertyChanged;
 
         if (_themeService != null)
@@ -69,7 +72,7 @@ public partial class MainWindow : Window
 
     private void FocarCampoEan()
     {
-        if (_viewModel?.TemModalAberto == true) return;
+        if (_viewModel?.TemModalAberto == true || _viewModel?.IsVendaConcluidaVisivel == true) return;
 
         Dispatcher.BeginInvoke(new Action(() =>
         {
@@ -123,6 +126,11 @@ public partial class MainWindow : Window
         }));
     }
 
+    private void FocarCampoPagamento()
+    {
+        Dispatcher.BeginInvoke(new Action(() => FocarCampoModal(TxtValorPago, selecionarConteudo: true)));
+    }
+
     private static void FocarCampoModal(Control controle, bool selecionarConteudo = false)
     {
         controle.Focus();
@@ -137,6 +145,37 @@ public partial class MainWindow : Window
     private void AlternarTema_Click(object sender, RoutedEventArgs e)
     {
         _themeService?.Toggle();
+        FocarCampoEan();
+    }
+
+    private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Delete || _viewModel == null) return;
+
+        // Em campos editáveis, Delete deve apagar texto — nunca remover item da venda.
+        if (Keyboard.FocusedElement is TextBox) return;
+        if (_viewModel.TemModalAberto || _viewModel.IsVendaConcluidaVisivel) return;
+
+        if (_viewModel.RemoverItemCommand.CanExecute(null))
+        {
+            _viewModel.RemoverItemCommand.Execute(null);
+            e.Handled = true;
+        }
+    }
+
+    private void MainWindow_PreviewTextInput(object sender, TextCompositionEventArgs e)
+    {
+        if (_viewModel == null || _viewModel.TemModalAberto || _viewModel.IsVendaConcluidaVisivel) return;
+        if (Keyboard.FocusedElement is TextBox) return;
+        if (string.IsNullOrEmpty(e.Text) || e.Text.Any(character => !char.IsDigit(character))) return;
+
+        // Recupera leituras do scanner mesmo após seleção de linha ou foco em um botão.
+        TxtEanInput.Focus();
+        Keyboard.Focus(TxtEanInput);
+        TxtEanInput.CaretIndex = TxtEanInput.Text.Length;
+        TxtEanInput.SelectedText = e.Text;
+        TxtEanInput.CaretIndex = TxtEanInput.Text.Length;
+        e.Handled = true;
     }
 
     private void ThemeService_ThemeChanged(object? sender, EventArgs e)
@@ -151,5 +190,9 @@ public partial class MainWindow : Window
         BtnAlternarTema.Content = _themeService.CurrentTheme == AppTheme.Dark
             ? "TEMA: ESCURO"
             : "TEMA: CLARO";
+
+        AutomationProperties.SetItemStatus(
+            BtnAlternarTema,
+            _themeService.CurrentTheme == AppTheme.Dark ? "Tema atual: Escuro" : "Tema atual: Claro");
     }
 }

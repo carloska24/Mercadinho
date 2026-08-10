@@ -22,7 +22,7 @@ public class ShortcutWiringTests
             .Where(key => !string.IsNullOrWhiteSpace(key))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var key in new[] { "F2", "F3", "F4", "F6", "F7", "F8", "F9", "Delete", "Escape" })
+        foreach (var key in new[] { "F2", "F3", "F4", "F6", "F7", "F8", "F9", "Escape" })
         {
             Assert.Contains(key, inputKeys);
         }

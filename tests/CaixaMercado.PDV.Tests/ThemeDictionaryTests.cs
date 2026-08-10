@@ -20,10 +20,21 @@ public class ThemeDictionaryTests
         "SecondaryTextBrush",
         "MutedTextBrush",
         "OnAccentTextBrush",
+        "OnWarningTextBrush",
+        "SuccessForegroundBrush",
+        "DangerForegroundBrush",
         "AccentGreenBrush",
         "AccentGreenHoverBrush",
         "SuccessActionBackgroundBrush",
         "SuccessActionHoverBrush",
+        "SuccessActionPressedBrush",
+        "BlueActionHoverBrush",
+        "BlueActionPressedBrush",
+        "WarningActionHoverBrush",
+        "WarningActionPressedBrush",
+        "DangerActionBackgroundBrush",
+        "DangerActionHoverBrush",
+        "DangerActionPressedBrush",
         "AccentYellowBrush",
         "AccentBlueBrush",
         "AccentCyanBrush",
@@ -36,12 +47,16 @@ public class ThemeDictionaryTests
         "ButtonNeutralPressedBrush",
         "DisabledBackgroundBrush",
         "DisabledForegroundBrush",
+        "InputSelectionBrush",
+        "InputSelectionTextBrush",
         "DataGridHeaderBackgroundBrush",
         "DataGridHeaderForegroundBrush",
         "DataGridRowBackgroundBrush",
         "DataGridRowAlternateBackgroundBrush",
         "DataGridRowSelectedBackgroundBrush",
         "DataGridRowSelectedForegroundBrush",
+        "DataGridRowHoverBackgroundBrush",
+        "DataGridRowHoverForegroundBrush",
         "DataGridGridLinesBrush"
     };
 
@@ -85,8 +100,38 @@ public class ThemeDictionaryTests
         AssertContrast(brushes, "PrimaryTextBrush", "ButtonNeutralBrush", 4.5);
         AssertContrast(brushes, "SecondaryTextBrush", "CardBackgroundBrush", 4.5);
         AssertContrast(brushes, "DisabledForegroundBrush", "DisabledBackgroundBrush", 4.5);
+        AssertContrast(brushes, "InputSelectionTextBrush", "InputSelectionBrush", 4.5);
         AssertContrast(brushes, "OnAccentTextBrush", "AccentBlueBrush", 4.5);
         AssertContrast(brushes, "OnAccentTextBrush", "SuccessActionBackgroundBrush", 4.5);
+        AssertContrast(brushes, "OnWarningTextBrush", "AccentYellowBrush", 4.5);
+        AssertContrast(brushes, "OnAccentTextBrush", "DangerActionBackgroundBrush", 4.5);
+        AssertContrast(brushes, "DangerForegroundBrush", "CardBackgroundBrush", 4.5);
+        AssertContrast(brushes, "SuccessForegroundBrush", "SuccessContainerBrush", 4.5);
+        AssertContrast(brushes, "MutedTextBrush", "CardBackgroundBrush", 4.5);
+        AssertContrast(brushes, "DataGridRowSelectedForegroundBrush", "DataGridRowSelectedBackgroundBrush", 4.5);
+        AssertContrast(brushes, "DataGridRowHoverForegroundBrush", "DataGridRowHoverBackgroundBrush", 4.5);
+        AssertContrast(brushes, "OnAccentTextBrush", "BlueActionHoverBrush", 4.5);
+        AssertContrast(brushes, "OnAccentTextBrush", "BlueActionPressedBrush", 4.5);
+        AssertContrast(brushes, "OnAccentTextBrush", "SuccessActionHoverBrush", 4.5);
+        AssertContrast(brushes, "OnAccentTextBrush", "SuccessActionPressedBrush", 4.5);
+        AssertContrast(brushes, "OnWarningTextBrush", "WarningActionHoverBrush", 4.5);
+        AssertContrast(brushes, "OnWarningTextBrush", "WarningActionPressedBrush", 4.5);
+        AssertContrast(brushes, "OnAccentTextBrush", "DangerActionHoverBrush", 4.5);
+        AssertContrast(brushes, "OnAccentTextBrush", "DangerActionPressedBrush", 4.5);
+        AssertContrast(brushes, "MutedTextBrush", "SurfaceRaisedBrush", 4.5);
+    }
+
+    [Fact]
+    public void IndicadoresDeStatus_NaoUsamVerdeFixoIncompativelComTemaClaro()
+    {
+        var repositoryRoot = FindRepositoryRoot();
+        var files = new[]
+        {
+            Path.Combine(repositoryRoot, "src", "CaixaMercado.PDV", "Resources", "EmptyState.xaml"),
+            Path.Combine(repositoryRoot, "src", "CaixaMercado.PDV", "Resources", "VendaConcluidaState.xaml")
+        };
+
+        Assert.All(files, file => Assert.DoesNotContain("Fill=\"#34D399\"", File.ReadAllText(file), StringComparison.OrdinalIgnoreCase));
     }
 
     private static string[] ReadResourceKeys(string filePath)

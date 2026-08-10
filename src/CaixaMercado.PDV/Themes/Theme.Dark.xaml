@@ -13,14 +13,24 @@
 
     <SolidColorBrush x:Key="PrimaryTextBrush" Color="#F8FAFC" />
     <SolidColorBrush x:Key="SecondaryTextBrush" Color="#94A3B8" />
-    <SolidColorBrush x:Key="MutedTextBrush" Color="#64748B" />
+    <SolidColorBrush x:Key="MutedTextBrush" Color="#A8B3C5" />
     <SolidColorBrush x:Key="OnAccentTextBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="OnWarningTextBrush" Color="#111827" />
+    <SolidColorBrush x:Key="SuccessForegroundBrush" Color="#6EE7B7" />
+    <SolidColorBrush x:Key="DangerForegroundBrush" Color="#FCA5A5" />
 
     <SolidColorBrush x:Key="AccentGreenBrush" Color="#10B981" />
     <SolidColorBrush x:Key="AccentGreenHoverBrush" Color="#059669" />
     <SolidColorBrush x:Key="SuccessActionBackgroundBrush" Color="#047857" />
     <SolidColorBrush x:Key="SuccessActionHoverBrush" Color="#065F46" />
+    <SolidColorBrush x:Key="SuccessActionPressedBrush" Color="#064E3B" />
+    <SolidColorBrush x:Key="BlueActionHoverBrush" Color="#1D4ED8" />
+    <SolidColorBrush x:Key="BlueActionPressedBrush" Color="#1E40AF" />
+    <SolidColorBrush x:Key="WarningActionHoverBrush" Color="#FBBF24" />
+    <SolidColorBrush x:Key="WarningActionPressedBrush" Color="#D97706" />
+    <SolidColorBrush x:Key="DangerActionBackgroundBrush" Color="#DC2626" />
+    <SolidColorBrush x:Key="DangerActionHoverBrush" Color="#B91C1C" />
+    <SolidColorBrush x:Key="DangerActionPressedBrush" Color="#991B1B" />
     <SolidColorBrush x:Key="AccentYellowBrush" Color="#F59E0B" />
     <SolidColorBrush x:Key="AccentBlueBrush" Color="#2563EB" />
     <SolidColorBrush x:Key="AccentCyanBrush" Color="#06B6D4" />
@@ -34,6 +44,8 @@
     <SolidColorBrush x:Key="ButtonNeutralPressedBrush" Color="#0F172A" />
     <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#334155" />
     <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#F8FAFC" />
+    <SolidColorBrush x:Key="InputSelectionBrush" Color="#2563EB" />
+    <SolidColorBrush x:Key="InputSelectionTextBrush" Color="#FFFFFF" />
 
     <SolidColorBrush x:Key="DataGridHeaderBackgroundBrush" Color="#25334A" />
     <SolidColorBrush x:Key="DataGridHeaderForegroundBrush" Color="#94A3B8" />
@@ -41,5 +53,7 @@
     <SolidColorBrush x:Key="DataGridRowAlternateBackgroundBrush" Color="#16233B" />
     <SolidColorBrush x:Key="DataGridRowSelectedBackgroundBrush" Color="#1E3A8A" />
     <SolidColorBrush x:Key="DataGridRowSelectedForegroundBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="DataGridRowHoverBackgroundBrush" Color="#263751" />
+    <SolidColorBrush x:Key="DataGridRowHoverForegroundBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="DataGridGridLinesBrush" Color="#1E2B42" />
 </ResourceDictionary>

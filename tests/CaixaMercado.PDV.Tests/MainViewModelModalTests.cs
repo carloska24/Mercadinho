@@ -16,13 +16,16 @@ public class MainViewModelModalTests
         viewModel.ValorPagoInput = 0m;
 
         var solicitacoesDeFocoNoEan = 0;
+        var solicitacoesDeFocoNoPagamento = 0;
         viewModel.RequestFocusEan += () => solicitacoesDeFocoNoEan++;
+        viewModel.RequestFocusPagamento += () => solicitacoesDeFocoNoPagamento++;
 
         viewModel.ConfirmarPagamentoCommand.Execute(null);
 
         Assert.True(viewModel.IsModalPagamentoAberto);
         Assert.True(viewModel.HasMensagemErroModal);
         Assert.Equal(0, solicitacoesDeFocoNoEan);
+        Assert.Equal(1, solicitacoesDeFocoNoPagamento);
     }
 
     [Fact]
@@ -204,6 +207,61 @@ public class MainViewModelModalTests
         Assert.Equal("Nenhum item registrado", viewModel.UltimoItemDescricao);
         Assert.Equal(0m, viewModel.UltimoItemTotal);
     }
+
+    [Fact]
+    public void F2DuranteIdentificacaoDeCliente_NaoEmpilhaConsulta()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+        viewModel.AtalhoF3Command.Execute(null);
+
+        viewModel.AbrirConsultaCommand.Execute(null);
+
+        Assert.True(viewModel.IsModalClienteAberto);
+        Assert.False(viewModel.IsModalConsultaAberta);
+        Assert.Equal(1, ContarModaisAbertos(viewModel));
+    }
+
+    [Fact]
+    public void FormaPagamento_NotificaEstadoVisualExclusivo()
+    {
+        var viewModel = CriarVendaComPagamentoAberto();
+
+        viewModel.SelecionarFormaPagamentoCommand.Execute(TipoPagamento.Pix);
+
+        Assert.False(viewModel.IsPagamentoDinheiroSelecionado);
+        Assert.True(viewModel.IsPagamentoPixSelecionado);
+        Assert.False(viewModel.IsPagamentoDebitoSelecionado);
+        Assert.False(viewModel.IsPagamentoCreditoSelecionado);
+
+        viewModel.IsPagamentoDinheiroSelecionado = true;
+
+        Assert.Equal(TipoPagamento.Dinheiro, viewModel.TipoPagamentoSelecionado);
+        Assert.True(viewModel.IsPagamentoDinheiroSelecionado);
+        Assert.False(viewModel.IsPagamentoPixSelecionado);
+    }
+
+    [Fact]
+    public void Pagamento_ReabertoReiniciaSelecaoEmDinheiro()
+    {
+        var viewModel = CriarVendaComPagamentoAberto();
+        viewModel.SelecionarFormaPagamentoCommand.Execute(TipoPagamento.Pix);
+
+        viewModel.FecharModalPagamentoCommand.Execute(null);
+        viewModel.AbrirPagamentoCommand.Execute(null);
+
+        Assert.True(viewModel.IsPagamentoDinheiroSelecionado);
+        Assert.False(viewModel.IsPagamentoPixSelecionado);
+        Assert.Equal(TipoPagamento.Dinheiro, viewModel.TipoPagamentoSelecionado);
+    }
+
+    private static int ContarModaisAbertos(MainViewModel viewModel) => new[]
+    {
+        viewModel.IsModalPagamentoAberto,
+        viewModel.IsModalConsultaAberta,
+        viewModel.IsModalDescontoAberto,
+        viewModel.IsModalConfirmarCancelarAberto,
+        viewModel.IsModalClienteAberto
+    }.Count(aberto => aberto);
 
     private static MainViewModel CriarVendaComPagamentoAberto()
     {

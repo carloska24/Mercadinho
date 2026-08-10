@@ -20,8 +20,13 @@ public class ThemeServiceTests
                 var application = new System.Windows.Application();
                 var resources = new ResourceDictionary();
                 var initialTheme = LoadTheme(AppTheme.Dark);
+                var styles = new ResourceDictionary
+                {
+                    Source = new Uri("/CaixaMercado.PDV;component/Resources/Styles.xaml", UriKind.Relative)
+                };
                 var sentinel = new ResourceDictionary { ["Sentinel"] = "preservado" };
                 resources.MergedDictionaries.Add(initialTheme);
+                resources.MergedDictionaries.Add(styles);
                 resources.MergedDictionaries.Add(sentinel);
 
                 var service = new ThemeService(resources, preferencePath);
@@ -31,7 +36,8 @@ public class ThemeServiceTests
                 service.Toggle();
 
                 Assert.Equal(AppTheme.Light, service.CurrentTheme);
-                Assert.Same(sentinel, resources.MergedDictionaries[1]);
+                Assert.Same(styles, resources.MergedDictionaries[1]);
+                Assert.Same(sentinel, resources.MergedDictionaries[2]);
                 Assert.Contains("Theme.Light.xaml", resources.MergedDictionaries[0].Source!.OriginalString);
                 Assert.Equal("Light", File.ReadAllText(preferencePath));
                 Assert.Equal(1, notifications);
