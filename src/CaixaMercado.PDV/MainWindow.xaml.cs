@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CaixaMercado.PDV.Services;
 using CaixaMercado.PDV.ViewModels;
 
 namespace CaixaMercado.PDV;
@@ -12,6 +13,7 @@ namespace CaixaMercado.PDV;
 public partial class MainWindow : Window
 {
     private MainViewModel? _viewModel;
+    private ThemeService? _themeService;
 
     public MainWindow()
     {
@@ -28,6 +30,13 @@ public partial class MainWindow : Window
             vm.RequestFocusEan += FocarCampoEan;
             vm.PropertyChanged += MainViewModel_PropertyChanged;
         }
+
+        _themeService = (System.Windows.Application.Current as App)?.ThemeService;
+        if (_themeService != null)
+        {
+            _themeService.ThemeChanged += ThemeService_ThemeChanged;
+            AtualizarBotaoTema();
+        }
         FocarCampoEan();
     }
 
@@ -37,6 +46,11 @@ public partial class MainWindow : Window
 
         _viewModel.RequestFocusEan -= FocarCampoEan;
         _viewModel.PropertyChanged -= MainViewModel_PropertyChanged;
+
+        if (_themeService != null)
+        {
+            _themeService.ThemeChanged -= ThemeService_ThemeChanged;
+        }
     }
 
     private void MainViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -99,5 +113,24 @@ public partial class MainWindow : Window
         {
             textBox.SelectAll();
         }
+    }
+
+    private void AlternarTema_Click(object sender, RoutedEventArgs e)
+    {
+        _themeService?.Toggle();
+    }
+
+    private void ThemeService_ThemeChanged(object? sender, EventArgs e)
+    {
+        AtualizarBotaoTema();
+    }
+
+    private void AtualizarBotaoTema()
+    {
+        if (_themeService == null) return;
+
+        BtnAlternarTema.Content = _themeService.CurrentTheme == AppTheme.Dark
+            ? "TEMA: ESCURO"
+            : "TEMA: CLARO";
     }
 }

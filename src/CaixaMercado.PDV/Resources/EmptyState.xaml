@@ -64,20 +64,20 @@
                 </Viewbox>
 
                 <!-- Mensagem Principal de Estado -->
-                <TextBlock Text="CAIXA LIVRE" Foreground="#F8FAFC" FontSize="26" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                <TextBlock Text="CAIXA LIVRE" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="26" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,6" />
                 
                 <!-- Status Operacional -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
                     <Ellipse Width="10" Height="10" Fill="#34D399" Margin="0,0,8,0" VerticalAlignment="Center" />
-                    <TextBlock Text="SCANNER PRONTO" Foreground="#34D399" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
+                    <TextBlock Text="SCANNER PRONTO" Foreground="{DynamicResource AccentGreenBrush}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
                 </StackPanel>
 
-                <TextBlock Text="Aproxime o produto do scanner ou digite o código manualmente" Foreground="#94A3B8" FontSize="14" HorizontalAlignment="Center" Margin="0,0,20,0" />
+                <TextBlock Text="Aproxime o produto do scanner ou digite o código manualmente" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="14" HorizontalAlignment="Center" Margin="0,0,20,0" />
 
                 <!-- Dica de Atalho com Destaque -->
-                <Border Background="#10192B" BorderBrush="#3B82F6" BorderThickness="1.5" CornerRadius="20" Padding="16,8" HorizontalAlignment="Center">
-                    <TextBlock Foreground="#38BDF8" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center">
-                        <Run Text="F2" FontWeight="Bold" Foreground="#FACC15" />
+                <Border Background="{DynamicResource SaleAreaBackgroundBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="1.5" CornerRadius="20" Padding="16,8" HorizontalAlignment="Center">
+                    <TextBlock Foreground="{DynamicResource AccentCyanBrush}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center">
+                        <Run Text="F2" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" />
                         <Run Text=" — Consultar produto" />
                     </TextBlock>
                 </Border>

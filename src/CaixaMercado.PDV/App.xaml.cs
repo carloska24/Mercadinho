@@ -1,6 +1,5 @@
-using System.Configuration;
-using System.Data;
 using System.Windows;
+using CaixaMercado.PDV.Services;
 
 namespace CaixaMercado.PDV;
 
@@ -9,5 +8,12 @@ namespace CaixaMercado.PDV;
 /// </summary>
 public partial class App : System.Windows.Application
 {
+    public ThemeService ThemeService { get; private set; } = null!;
+
+    protected override void OnStartup(StartupEventArgs e)
+    {
+        ThemeService = new ThemeService(Resources);
+        base.OnStartup(e);
+    }
 }
 

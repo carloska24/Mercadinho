@@ -55,7 +55,7 @@ public class MainViewModel : ViewModelBase
 
         // Comandos Principais
         AdicionarItemCommand = new RelayCommand(ExecutarAdicionarItem);
-        RemoverItemCommand = new RelayCommand(ExecutarRemoverItem, () => ItemSelecionado != null || Itens.Count > 0);
+        RemoverItemCommand = new RelayCommand(ExecutarRemoverItem, () => !TemModalAberto && (ItemSelecionado != null || Itens.Count > 0));
         AbrirPagamentoCommand = new RelayCommand(ExecutarAbrirPagamento, () => Itens.Count > 0);
         ConfirmarPagamentoCommand = new RelayCommand(ExecutarConfirmarPagamento);
         FecharModalPagamentoCommand = new RelayCommand(ExecutarFecharModalPagamento);
@@ -157,6 +157,7 @@ public class MainViewModel : ViewModelBase
             {
                 OnPropertyChanged(nameof(TemModalAberto));
                 (SelecionarFormaPagamentoCommand as RelayCommand)?.RaiseCanExecuteChanged();
+                (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
     }
@@ -208,6 +209,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isModalConsultaAberta, value))
             {
                 OnPropertyChanged(nameof(TemModalAberto));
+                (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
     }
@@ -245,6 +247,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isModalDescontoAberto, value))
             {
                 OnPropertyChanged(nameof(TemModalAberto));
+                (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
     }
@@ -291,6 +294,7 @@ public class MainViewModel : ViewModelBase
             if (SetProperty(ref _isModalConfirmarCancelarAberto, value))
             {
                 OnPropertyChanged(nameof(TemModalAberto));
+                (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
             }
         }
     }
@@ -372,6 +376,8 @@ public class MainViewModel : ViewModelBase
 
     private void ExecutarRemoverItem()
     {
+        if (TemModalAberto) return;
+
         var seqRemover = ItemSelecionado?.Sequencial ?? Itens.LastOrDefault()?.Sequencial ?? 0;
         if (seqRemover > 0)
         {
@@ -494,7 +500,8 @@ public class MainViewModel : ViewModelBase
 
         if (IsModalConfirmarCancelarAberto)
         {
-            ExecutarConfirmarCancelarVenda();
+            IsModalConfirmarCancelarAberto = false;
+            SolicitarFocoEan();
             return;
         }
 

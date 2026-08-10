@@ -8,7 +8,7 @@
                 
                 <!-- Circulo Animado Verde com Checkmark SVG -->
                 <Grid HorizontalAlignment="Center" Margin="0,0,0,16">
-                    <Border Background="#064E3B" BorderBrush="#10B981" BorderThickness="2" CornerRadius="60" Width="120" Height="120" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                    <Border Background="{DynamicResource SuccessContainerBrush}" BorderBrush="{DynamicResource AccentGreenBrush}" BorderThickness="2" CornerRadius="60" Width="120" Height="120" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                         <Border.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform x:Name="CheckPulseScale" ScaleX="1" ScaleY="1" />
@@ -36,14 +36,14 @@
                 </Grid>
 
                 <!-- Mensagem de Sucesso -->
-                <TextBlock Text="VENDA FINALIZADA!" Foreground="#34D399" FontSize="26" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,4" />
-                <TextBlock Text="Obrigado pela compra!" Foreground="#94A3B8" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,16" />
+                <TextBlock Text="VENDA FINALIZADA!" Foreground="{DynamicResource AccentGreenBrush}" FontSize="26" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,4" />
+                <TextBlock Text="Obrigado pela compra!" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,0,0,16" />
 
                 <!-- Card de Troco -->
-                <Border Background="#020617" BorderBrush="#10B981" BorderThickness="1.5" CornerRadius="8" Padding="20,10" HorizontalAlignment="Center" Margin="0,0,0,16">
+                <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentGreenBrush}" BorderThickness="1.5" CornerRadius="8" Padding="20,10" HorizontalAlignment="Center" Margin="0,0,0,16">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="TROCO:" Foreground="#94A3B8" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,12,0" />
-                        <TextBlock Text="{Binding UltimoTrocoFinalizado, StringFormat=R$ {0:N2}}" Foreground="#F59E0B" FontSize="26" FontWeight="Black" VerticalAlignment="Center" />
+                        <TextBlock Text="TROCO:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="16" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,12,0" />
+                        <TextBlock Text="{Binding UltimoTrocoFinalizado, StringFormat=R$ {0:N2}}" Foreground="{DynamicResource AccentYellowBrush}" FontSize="26" FontWeight="Black" VerticalAlignment="Center" />
                     </StackPanel>
                 </Border>
 
@@ -67,7 +67,7 @@
                 </Grid>
 
                 <!-- Status de Transição -->
-                <TextBlock Text="Preparando próximo atendimento..." Foreground="#64748B" FontSize="13" FontStyle="Italic" HorizontalAlignment="Center" />
+                <TextBlock Text="Preparando próximo atendimento..." Foreground="{DynamicResource MutedTextBrush}" FontSize="13" FontStyle="Italic" HorizontalAlignment="Center" />
             </StackPanel>
         </Grid>
 

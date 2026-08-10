@@ -95,6 +95,31 @@ public class MainViewModelModalTests
         Assert.False(viewModel.IsDescontoPercentual);
     }
 
+    [Fact]
+    public void RemoverItemDuranteModal_NaoAlteraVenda()
+    {
+        var viewModel = CriarVendaComPagamentoAberto();
+        var quantidadeAntes = viewModel.Itens.Count;
+
+        viewModel.RemoverItemCommand.Execute(null);
+
+        Assert.Equal(quantidadeAntes, viewModel.Itens.Count);
+    }
+
+    [Fact]
+    public void EnterDuranteConfirmacaoDeCancelamento_NaoCancelaVenda()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+        viewModel.EanInput = "7891234567890";
+        viewModel.AdicionarItemCommand.Execute(null);
+        viewModel.CancelarVendaCommand.Execute(null);
+
+        viewModel.ExecutarAcaoPrincipalCommand.Execute(null);
+
+        Assert.NotEmpty(viewModel.Itens);
+        Assert.False(viewModel.IsModalConfirmarCancelarAberto);
+    }
+
     private static MainViewModel CriarVendaComPagamentoAberto()
     {
         var viewModel = new MainViewModel(new VendaService());
