@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaixaMercado.Api.Tests", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaixaMercado.PDV.Tests", "tests\CaixaMercado.PDV.Tests\CaixaMercado.PDV.Tests.csproj", "{3E463355-FEDF-43D7-AD31-025C930E3BBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaixaMercado.Infrastructure.Tests", "tests\CaixaMercado.Infrastructure.Tests\CaixaMercado.Infrastructure.Tests.csproj", "{A0237384-E820-420D-B947-D71BF2BF3443}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{3E463355-FEDF-43D7-AD31-025C930E3BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E463355-FEDF-43D7-AD31-025C930E3BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E463355-FEDF-43D7-AD31-025C930E3BBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0237384-E820-420D-B947-D71BF2BF3443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0237384-E820-420D-B947-D71BF2BF3443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0237384-E820-420D-B947-D71BF2BF3443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0237384-E820-420D-B947-D71BF2BF3443}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BA84F18B-4E7D-4AD2-B834-DA3CCC9DB912} = {5A6BC52C-81E1-4303-A7CE-7DB560CF47F2}
@@ -81,5 +87,6 @@ Global
 		{84AB4218-CDF4-4193-AB6D-993BDC240D73} = {9B5402F7-1AE7-49A5-967F-E15A09298009}
 		{9BCDDAE6-BFA8-4806-866B-F61D650CE507} = {9B5402F7-1AE7-49A5-967F-E15A09298009}
 		{3E463355-FEDF-43D7-AD31-025C930E3BBF} = {9B5402F7-1AE7-49A5-967F-E15A09298009}
+		{A0237384-E820-420D-B947-D71BF2BF3443} = {9B5402F7-1AE7-49A5-967F-E15A09298009}
 	EndGlobalSection
 EndGlobal

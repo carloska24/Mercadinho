@@ -1,4 +1,8 @@
 using CaixaMercado.Api.Infrastructure;
+using CaixaMercado.Api.Features.Produtos;
+using CaixaMercado.Api.Features.Vendas;
+using CaixaMercado.Application;
+using CaixaMercado.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +32,8 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 builder.Services.AddHealthChecks();
+builder.Services.AddMercadinhoApplication();
+builder.Services.AddMercadinhoPersistence(builder.Configuration);
 
 var app = builder.Build();
 
@@ -49,11 +55,13 @@ app.MapHealthChecks("/health/live", new HealthCheckOptions
 
 app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {
-    // Inclui todos os checks registrados. Quando a Infrastructure registrar
-    // PostgreSQL, a prontidao passara a depender dele sem mudar este endpoint.
+    // A prontidão inclui o PostgreSQL registrado pela Infrastructure.
     Predicate = _ => true,
     ResponseWriter = HealthCheckResponseWriter.WriteAsync
 });
+
+app.MapProdutosEndpoints();
+app.MapVendasEndpoints();
 
 app.Run();
 

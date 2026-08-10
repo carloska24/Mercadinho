@@ -9,6 +9,7 @@ public sealed class MercadinhoDbContext(DbContextOptions<MercadinhoDbContext> op
     public DbSet<Produto> Produtos => Set<Produto>();
     public DbSet<Venda> Vendas => Set<Venda>();
     public DbSet<ItemVenda> ItensVenda => Set<ItemVenda>();
+    internal DbSet<RegistroIdempotenciaEntity> RegistrosIdempotencia => Set<RegistroIdempotenciaEntity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

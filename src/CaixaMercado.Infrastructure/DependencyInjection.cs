@@ -1,4 +1,7 @@
+using CaixaMercado.Application.Operacional.Portas;
+using CaixaMercado.Infrastructure.Health;
 using CaixaMercado.Infrastructure.Persistence;
+using CaixaMercado.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +24,14 @@ public static class DependencyInjection
                 postgres.MigrationsAssembly(typeof(MercadinhoDbContext).Assembly.FullName);
                 postgres.EnableRetryOnFailure(3, TimeSpan.FromSeconds(2), null);
             }));
+
+        services.AddScoped<IProdutoRepository, ProdutoRepository>();
+        services.AddScoped<IVendaRepository, VendaRepository>();
+        services.AddScoped<IIdempotencyStore, IdempotencyStore>();
+        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        services.AddSingleton<IClock, SystemClock>();
+        services.AddHealthChecks()
+            .AddCheck<PostgreSqlHealthCheck>("postgresql", tags: ["ready"]);
 
         return services;
     }

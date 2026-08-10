@@ -2,17 +2,20 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace CaixaMercado.Api.Tests;
 
-public sealed class ApiContractTests : IClassFixture<WebApplicationFactory<Program>>
+public sealed class ApiContractTests : IClassFixture<ApiWebApplicationFactory>
 {
+    private readonly ApiWebApplicationFactory _factory;
     private readonly HttpClient _client;
 
-    public ApiContractTests(WebApplicationFactory<Program> factory)
+    public ApiContractTests(ApiWebApplicationFactory factory)
     {
+        _factory = factory;
         _client = factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false
@@ -78,14 +81,17 @@ public sealed class ApiContractTests : IClassFixture<WebApplicationFactory<Progr
     [Fact]
     public async Task BancoIndisponivel_DeveAfetarReadySemAfetarLive()
     {
-        await using var factory = new WebApplicationFactory<Program>()
+        await using var factory = _factory
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices(services =>
                 {
-                    services.AddHealthChecks().AddCheck(
-                        "postgresql",
-                        () => HealthCheckResult.Unhealthy("Banco indisponivel"));
+                    services.PostConfigure<HealthCheckServiceOptions>(options =>
+                    {
+                        ApiWebApplicationFactory.RemoverPostgreSql(options);
+                        options.Registrations.Add(ApiWebApplicationFactory.CriarRegistroPostgreSql(
+                            HealthCheckResult.Unhealthy("Banco indisponivel")));
+                    });
                 });
             });
         using var client = factory.CreateClient();
@@ -102,5 +108,44 @@ public sealed class ApiContractTests : IClassFixture<WebApplicationFactory<Progr
         var databaseCheck = Assert.Single(body.RootElement.GetProperty("checks").EnumerateArray());
         Assert.Equal("postgresql", databaseCheck.GetProperty("name").GetString());
         Assert.Equal("Unhealthy", databaseCheck.GetProperty("status").GetString());
+    }
+}
+
+public sealed class ApiWebApplicationFactory : WebApplicationFactory<Program>
+{
+    private const string TestConnectionString =
+        "Host=127.0.0.1;Port=1;Database=caixa_mercado_tests;Username=test;Timeout=1;Pooling=false";
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.UseEnvironment("Testing");
+        builder.UseSetting("ConnectionStrings:Mercadinho", TestConnectionString);
+        builder.ConfigureServices(services =>
+        {
+            services.PostConfigure<HealthCheckServiceOptions>(options =>
+            {
+                RemoverPostgreSql(options);
+                options.Registrations.Add(CriarRegistroPostgreSql(
+                    HealthCheckResult.Healthy("PostgreSQL substituído por fake no teste HTTP.")));
+            });
+        });
+    }
+
+    internal static void RemoverPostgreSql(HealthCheckServiceOptions options)
+    {
+        foreach (var registration in options.Registrations
+                     .Where(item => item.Name == "postgresql")
+                     .ToArray())
+            options.Registrations.Remove(registration);
+    }
+
+    internal static HealthCheckRegistration CriarRegistroPostgreSql(HealthCheckResult result) =>
+        new("postgresql", _ => new FixedHealthCheck(result), null, ["ready"]);
+
+    private sealed class FixedHealthCheck(HealthCheckResult result) : IHealthCheck
+    {
+        public Task<HealthCheckResult> CheckHealthAsync(
+            HealthCheckContext context,
+            CancellationToken cancellationToken = default) => Task.FromResult(result);
     }
 }
