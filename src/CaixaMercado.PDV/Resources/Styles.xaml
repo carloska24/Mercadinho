@@ -53,7 +53,9 @@
                             <Setter Property="BorderBrush" Value="{DynamicResource AccentBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Opacity" Value="0.45" />
+                            <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+                            <Setter Property="Opacity" Value="0.8" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -63,7 +65,7 @@
 
     <!-- Botão de Ação Destacado (Pagamento F9) -->
     <Style x:Key="PrimaryActionButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="{DynamicResource AccentGreenBrush}" />
+        <Setter Property="Background" Value="{DynamicResource SuccessActionBackgroundBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource OnAccentTextBrush}" />
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontWeight" Value="Bold" />
@@ -79,11 +81,11 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource AccentGreenHoverBrush}" />
+                            <Setter Property="Background" Value="{DynamicResource SuccessActionHoverBrush}" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Background" Value="#334155" />
-                            <Setter Property="Foreground" Value="#64748B" />
+                            <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

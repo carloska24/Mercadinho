@@ -15,9 +15,12 @@
     <SolidColorBrush x:Key="SecondaryTextBrush" Color="#94A3B8" />
     <SolidColorBrush x:Key="MutedTextBrush" Color="#64748B" />
     <SolidColorBrush x:Key="OnAccentTextBrush" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="OnWarningTextBrush" Color="#111827" />
 
     <SolidColorBrush x:Key="AccentGreenBrush" Color="#10B981" />
     <SolidColorBrush x:Key="AccentGreenHoverBrush" Color="#059669" />
+    <SolidColorBrush x:Key="SuccessActionBackgroundBrush" Color="#047857" />
+    <SolidColorBrush x:Key="SuccessActionHoverBrush" Color="#065F46" />
     <SolidColorBrush x:Key="AccentYellowBrush" Color="#F59E0B" />
     <SolidColorBrush x:Key="AccentBlueBrush" Color="#2563EB" />
     <SolidColorBrush x:Key="AccentCyanBrush" Color="#06B6D4" />
@@ -29,6 +32,8 @@
     <SolidColorBrush x:Key="ButtonNeutralBrush" Color="#1E293B" />
     <SolidColorBrush x:Key="ButtonNeutralHoverBrush" Color="#2A3B54" />
     <SolidColorBrush x:Key="ButtonNeutralPressedBrush" Color="#0F172A" />
+    <SolidColorBrush x:Key="DisabledBackgroundBrush" Color="#334155" />
+    <SolidColorBrush x:Key="DisabledForegroundBrush" Color="#F8FAFC" />
 
     <SolidColorBrush x:Key="DataGridHeaderBackgroundBrush" Color="#25334A" />
     <SolidColorBrush x:Key="DataGridHeaderForegroundBrush" Color="#94A3B8" />

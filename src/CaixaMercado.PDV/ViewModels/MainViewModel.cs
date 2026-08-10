@@ -14,6 +14,7 @@ public class MainViewModel : ViewModelBase
 
     // Foco para a View
     public event Action? RequestFocusEan;
+    public event Action? RequestFocusQuantidade;
 
     private string _eanInput = string.Empty;
     private decimal _quantidadeInput = 1m;
@@ -22,6 +23,7 @@ public class MainViewModel : ViewModelBase
     private decimal _ultimoItemTotal = 0m;
     private string _mensagemStatus = "CAIXA LIVRE — AGUARDANDO PRODUTO";
     private string _clienteNome = "CONSUMIDOR NÃO IDENTIFICADO";
+    private string _clienteNomeInput = string.Empty;
 
     // Modal Pagamento (F9)
     private bool _isModalPagamentoAberto;
@@ -42,6 +44,7 @@ public class MainViewModel : ViewModelBase
 
     // Modal Confirmar Cancelamento de Venda (ESC)
     private bool _isModalConfirmarCancelarAberto;
+    private bool _isModalClienteAberto;
 
     public MainViewModel() : this(new VendaService())
     {
@@ -73,6 +76,12 @@ public class MainViewModel : ViewModelBase
         AbrirDescontoCommand = new RelayCommand(ExecutarAbrirDesconto, () => Itens.Count > 0);
         ConfirmarDescontoCommand = new RelayCommand(ExecutarConfirmarDesconto);
         FecharModalDescontoCommand = new RelayCommand(() => { IsModalDescontoAberto = false; SolicitarFocoEan(); });
+
+        AtalhoF3Command = new RelayCommand(ExecutarAtalhoF3);
+        AtalhoF4Command = new RelayCommand(ExecutarAtalhoF4);
+        AtalhoF8Command = new RelayCommand(ExecutarAtalhoF8);
+        ConfirmarClienteCommand = new RelayCommand(ExecutarConfirmarCliente);
+        FecharModalClienteCommand = new RelayCommand(() => { IsModalClienteAberto = false; SolicitarFocoEan(); });
 
         // Atalhos de Forma de Pagamento F1-F4 na Modal
         SelecionarFormaPagamentoCommand = new RelayCommand((param) =>
@@ -145,6 +154,12 @@ public class MainViewModel : ViewModelBase
     {
         get => _clienteNome;
         set => SetProperty(ref _clienteNome, value);
+    }
+
+    public string ClienteNomeInput
+    {
+        get => _clienteNomeInput;
+        set => SetProperty(ref _clienteNomeInput, value);
     }
 
     // Modais
@@ -299,6 +314,19 @@ public class MainViewModel : ViewModelBase
         }
     }
 
+    public bool IsModalClienteAberto
+    {
+        get => _isModalClienteAberto;
+        set
+        {
+            if (SetProperty(ref _isModalClienteAberto, value))
+            {
+                OnPropertyChanged(nameof(TemModalAberto));
+                (RemoverItemCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
     public bool IsVendaConcluidaVisivel
     {
         get => _isVendaConcluidaVisivel;
@@ -336,11 +364,17 @@ public class MainViewModel : ViewModelBase
     public ICommand SelecionarFormaPagamentoCommand { get; }
     public ICommand ExecutarAcaoPrincipalCommand { get; }
     public ICommand SolicitarFocoEanCommand { get; }
+    public ICommand AtalhoF3Command { get; }
+    public ICommand AtalhoF4Command { get; }
+    public ICommand AtalhoF8Command { get; }
+    public ICommand ConfirmarClienteCommand { get; }
+    public ICommand FecharModalClienteCommand { get; }
 
     public bool TemModalAberto => IsModalPagamentoAberto
         || IsModalConsultaAberta
         || IsModalDescontoAberto
-        || IsModalConfirmarCancelarAberto;
+        || IsModalConfirmarCancelarAberto
+        || IsModalClienteAberto;
 
     private void ExecutarAdicionarItem()
     {
@@ -385,6 +419,11 @@ public class MainViewModel : ViewModelBase
             {
                 MensagemStatus = $"ITEM #{seqRemover} REMOVIDO COM SUCESSO";
                 AtualizarDadosVenda();
+                ItemSelecionado = null;
+
+                var ultimoItemRestante = Itens.LastOrDefault();
+                UltimoItemDescricao = ultimoItemRestante?.DescricaoProduto ?? "Nenhum item registrado";
+                UltimoItemTotal = ultimoItemRestante?.Total ?? 0m;
             }
         }
         SolicitarFocoEan();
@@ -473,6 +512,13 @@ public class MainViewModel : ViewModelBase
             return;
         }
 
+        if (IsModalClienteAberto)
+        {
+            IsModalClienteAberto = false;
+            SolicitarFocoEan();
+            return;
+        }
+
         if (Itens.Count == 0) return;
 
         IsModalConfirmarCancelarAberto = true;
@@ -502,6 +548,12 @@ public class MainViewModel : ViewModelBase
         {
             IsModalConfirmarCancelarAberto = false;
             SolicitarFocoEan();
+            return;
+        }
+
+        if (IsModalClienteAberto)
+        {
+            ExecutarConfirmarCliente();
             return;
         }
 
@@ -536,6 +588,54 @@ public class MainViewModel : ViewModelBase
         FiltroConsulta = string.Empty;
         ExecutarFiltrarProdutos();
         IsModalConsultaAberta = true;
+    }
+
+    private void ExecutarAtalhoF3()
+    {
+        if (IsModalPagamentoAberto)
+        {
+            TipoPagamentoSelecionado = TipoPagamento.CartaoDebito;
+            return;
+        }
+
+        if (TemModalAberto) return;
+
+        ClienteNomeInput = ClienteNome == "CONSUMIDOR NÃO IDENTIFICADO"
+            ? string.Empty
+            : ClienteNome;
+        IsModalClienteAberto = true;
+    }
+
+    private void ExecutarAtalhoF4()
+    {
+        if (IsModalPagamentoAberto)
+        {
+            TipoPagamentoSelecionado = TipoPagamento.CartaoCredito;
+            return;
+        }
+
+        if (TemModalAberto) return;
+
+        RequestFocusQuantidade?.Invoke();
+    }
+
+    private void ExecutarAtalhoF8()
+    {
+        if (TemModalAberto) return;
+        ExecutarAbrirConsulta();
+    }
+
+    private void ExecutarConfirmarCliente()
+    {
+        ClienteNome = string.IsNullOrWhiteSpace(ClienteNomeInput)
+            ? "CONSUMIDOR NÃO IDENTIFICADO"
+            : ClienteNomeInput.Trim();
+
+        IsModalClienteAberto = false;
+        MensagemStatus = ClienteNome == "CONSUMIDOR NÃO IDENTIFICADO"
+            ? "CLIENTE REMOVIDO DA VENDA"
+            : $"CLIENTE IDENTIFICADO — {ClienteNome}";
+        SolicitarFocoEan();
     }
 
     private void ExecutarFiltrarProdutos()

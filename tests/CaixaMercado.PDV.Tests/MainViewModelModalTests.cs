@@ -120,6 +120,91 @@ public class MainViewModelModalTests
         Assert.False(viewModel.IsModalConfirmarCancelarAberto);
     }
 
+    [Fact]
+    public void F3ForaDoPagamento_IdentificaCliente()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+
+        viewModel.AtalhoF3Command.Execute(null);
+
+        Assert.True(viewModel.IsModalClienteAberto);
+
+        viewModel.ClienteNomeInput = "Maria da Silva";
+        viewModel.ConfirmarClienteCommand.Execute(null);
+
+        Assert.False(viewModel.IsModalClienteAberto);
+        Assert.Equal("Maria da Silva", viewModel.ClienteNome);
+    }
+
+    [Fact]
+    public void F3DurantePagamento_SelecionaDebitoSemAbrirCliente()
+    {
+        var viewModel = CriarVendaComPagamentoAberto();
+
+        viewModel.AtalhoF3Command.Execute(null);
+
+        Assert.Equal(TipoPagamento.CartaoDebito, viewModel.TipoPagamentoSelecionado);
+        Assert.False(viewModel.IsModalClienteAberto);
+    }
+
+    [Fact]
+    public void F4ForaDoPagamento_SolicitaFocoNaQuantidade()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+        var solicitacoesDeFoco = 0;
+        viewModel.RequestFocusQuantidade += () => solicitacoesDeFoco++;
+
+        viewModel.AtalhoF4Command.Execute(null);
+
+        Assert.Equal(1, solicitacoesDeFoco);
+    }
+
+    [Fact]
+    public void F4DurantePagamento_SelecionaCreditoSemAlterarFoco()
+    {
+        var viewModel = CriarVendaComPagamentoAberto();
+        var solicitacoesDeFoco = 0;
+        viewModel.RequestFocusQuantidade += () => solicitacoesDeFoco++;
+
+        viewModel.AtalhoF4Command.Execute(null);
+
+        Assert.Equal(TipoPagamento.CartaoCredito, viewModel.TipoPagamentoSelecionado);
+        Assert.Equal(0, solicitacoesDeFoco);
+    }
+
+    [Fact]
+    public void F8AbreConsultaSomenteForaDeOutroModal()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+
+        viewModel.AtalhoF8Command.Execute(null);
+
+        Assert.True(viewModel.IsModalConsultaAberta);
+
+        viewModel.FecharModalConsultaCommand.Execute(null);
+        viewModel.EanInput = "7891234567890";
+        viewModel.AdicionarItemCommand.Execute(null);
+        viewModel.AbrirPagamentoCommand.Execute(null);
+        viewModel.AtalhoF8Command.Execute(null);
+
+        Assert.True(viewModel.IsModalPagamentoAberto);
+        Assert.False(viewModel.IsModalConsultaAberta);
+    }
+
+    [Fact]
+    public void RemoverUltimoItem_LimpaCartaoDeUltimoItem()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+        viewModel.EanInput = "7891234567890";
+        viewModel.AdicionarItemCommand.Execute(null);
+
+        viewModel.RemoverItemCommand.Execute(null);
+
+        Assert.Empty(viewModel.Itens);
+        Assert.Equal("Nenhum item registrado", viewModel.UltimoItemDescricao);
+        Assert.Equal(0m, viewModel.UltimoItemTotal);
+    }
+
     private static MainViewModel CriarVendaComPagamentoAberto()
     {
         var viewModel = new MainViewModel(new VendaService());

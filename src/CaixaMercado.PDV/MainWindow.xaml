@@ -19,10 +19,11 @@
     <Window.InputBindings>
         <KeyBinding Key="F1" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.Dinheiro}" />
         <KeyBinding Key="F2" Command="{Binding AbrirConsultaCommand}" />
-        <KeyBinding Key="F3" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.CartaoDebito}" />
-        <KeyBinding Key="F4" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.CartaoCredito}" />
+        <KeyBinding Key="F3" Command="{Binding AtalhoF3Command}" />
+        <KeyBinding Key="F4" Command="{Binding AtalhoF4Command}" />
         <KeyBinding Key="F6" Command="{Binding AbrirDescontoCommand}" />
         <KeyBinding Key="F7" Command="{Binding RemoverItemCommand}" />
+        <KeyBinding Key="F8" Command="{Binding AtalhoF8Command}" />
         <KeyBinding Key="F9" Command="{Binding AbrirPagamentoCommand}" />
         <KeyBinding Key="Delete" Command="{Binding RemoverItemCommand}" />
         <KeyBinding Key="Escape" Command="{Binding CancelarVendaCommand}" />
@@ -120,7 +121,7 @@
                         <!-- Quantidade -->
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="QTD (F4)" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,4" />
-                            <TextBox Text="{Binding QuantidadeInput, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBox x:Name="TxtQuantidadeInput" Text="{Binding QuantidadeInput, UpdateSourceTrigger=PropertyChanged}"
                                      FontSize="22" FontWeight="Bold" Background="{DynamicResource InputBackgroundBrush}" Foreground="{DynamicResource AccentCyanBrush}"
                                      BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="2" Padding="8,6" HorizontalContentAlignment="Center" />
                         </StackPanel>
@@ -282,8 +283,8 @@
                         Height="60">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Path Data="M 20 4 H 4 c -1.11 0 -1.99 .89 -1.99 2 L 2 18 c 0 1.11 .89 2 2 2 h 16 c 1.11 0 2 -.89 2 -2 V 6 c 0 -1.11 -.89 -2 -2 -2 z m 0 14 H 4 v -6 h 16 v 6 z m 0 -10 H 4 V 6 h 16 v 2 z"
-                              Fill="{DynamicResource OnAccentTextBrush}" Width="22" Height="22" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center" />
-                        <TextBlock Text="[ F9 ] PAGAMENTO ➔" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
+                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Width="22" Height="22" Stretch="Uniform" Margin="0,0,10,0" VerticalAlignment="Center" />
+                        <TextBlock Text="[ F9 ] PAGAMENTO ➔" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
             </Grid>
@@ -293,110 +294,110 @@
         <Border Grid.Row="2" Background="{DynamicResource SaleAreaBackgroundBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="0,1,0,1" Padding="6,4">
             <UniformGrid Columns="9" VerticalAlignment="Center">
                 <!-- F2 PRODUTO (ShoppingCart) -->
-                <Button Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F2 Produto">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#38BDF8" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="F2" Foreground="#38BDF8" FontWeight="Bold" FontSize="11" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentCyanBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F2" Foreground="{DynamicResource AccentCyanBrush}" FontWeight="Bold" FontSize="11" />
                         </Border>
                         <Path Data="M 19 6 H 5.21 L 4.27 2 H 1 V 4 H 2.73 L 6.13 18.47 C 5.45 18.84 5 19.56 5 20.38 C 5 21.48 5.9 22.38 7 22.38 C 8.1 22.38 9 21.48 9 20.38 C 9 19.98 8.88 19.61 8.68 19.31 H 16.32 C 16.12 19.61 16 19.98 16 20.38 C 16 21.48 16.9 22.38 18 22.38 C 19.1 22.38 20 21.48 20 20.38 C 20 19.34 19.2 18.48 18.18 18.4 H 7.21 L 6.74 16.4 H 19 L 22 6 H 19 Z"
-                              Fill="#38BDF8" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Produto" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource AccentCyanBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Produto" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
                 <!-- F3 CLIENTE (UserCircle) -->
-                <Button Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding AtalhoF3Command}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F3 Cliente">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#334155" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="F3" Foreground="#94A3B8" FontWeight="Bold" FontSize="11" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F3" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="Bold" FontSize="11" />
                         </Border>
                         <Path Data="M 12 2 C 6.48 2 2 6.48 2 12 s 4.48 10 10 10 10 -4.48 10 -10 S 17.52 2 12 2 z m 0 4 c 1.93 0 3.5 1.57 3.5 3.5 S 13.93 13 12 13 s -3.5 -1.57 -3.5 -3.5 S 10.07 6 12 6 z m 0 14 c -2.03 0 -3.8 -.85 -5.05 -2.2 c .03 -1.68 3.37 -2.6 5.05 -2.6 s 5.02 .92 5.05 2.6 C 15.8 19.15 14.03 20 12 20 z"
-                              Fill="#94A3B8" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Cliente" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource SecondaryTextBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Cliente" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
                 <!-- F4 QTD (ListNumbers) -->
-                <Button Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding AtalhoF4Command}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F4 Quantidade">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#334155" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="F4" Foreground="#94A3B8" FontWeight="Bold" FontSize="11" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F4" Foreground="{DynamicResource SecondaryTextBrush}" FontWeight="Bold" FontSize="11" />
                         </Border>
                         <Path Data="M 3 13 h 2 v -2 H 3 v 2 z m 0 4 h 2 v -2 H 3 v 2 z m 0 -8 h 2 V 7 H 3 v 2 z m 4 4 h 14 v -2 H 7 v 2 z m 0 4 h 14 v -2 H 7 v 2 z M 7 7 v 2 h 14 V 7 H 7 z"
-                              Fill="#94A3B8" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Qtd" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource SecondaryTextBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Qtd" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
                 <!-- F6 DESCONTO (Tag) -->
-                <Button Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding AbrirDescontoCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F6 Desconto">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#FACC15" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="F6" Foreground="#FACC15" FontWeight="Bold" FontSize="11" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentYellowBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F6" Foreground="{DynamicResource AccentYellowBrush}" FontWeight="Bold" FontSize="11" />
                         </Border>
                         <Path Data="M 21.41 11.58 l -9 -9 C 12.05 2.22 11.55 2 11 2 H 4 C 2.9 2 2 2.9 2 4 v 7 c 0 0.55 0.22 1.05 0.59 1.42 l 9 9 c 0.36 0.36 0.86 0.58 1.41 0.58 s 1.05 -0.22 1.41 -0.59 l 7 -7 c 0.37 -0.36 0.59 -0.86 0.59 -1.41 s -0.23 -1.06 -0.59 -1.42 z M 5.5 7 C 4.67 7 4 6.33 4 5.5 S 4.67 4 5.5 4 S 7 4.67 7 5.5 S 6.33 7 5.5 7 z"
-                              Fill="#FACC15" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Desconto" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource AccentYellowBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Desconto" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
                 <!-- F7 CANC ITEM (XCircle) -->
-                <Button Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F7 Cancelar item">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="F7" Foreground="#EF4444" FontWeight="Bold" FontSize="11" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentRedBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F7" Foreground="{DynamicResource AccentRedBrush}" FontWeight="Bold" FontSize="11" />
                         </Border>
                         <Path Data="M 12 2 C 6.47 2 2 6.47 2 12 s 4.47 10 10 10 10 -4.47 10 -10 S 17.53 2 12 2 z m 5 13.59 L 15.59 17 L 12 13.41 L 8.41 17 L 7 15.59 L 10.59 12 L 7 8.41 L 8.41 7 L 12 10.59 L 15.59 7 L 17 8.41 L 13.41 12 L 17 15.59 z"
-                              Fill="#EF4444" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Canc Item" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource AccentRedBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Canc Item" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
                 <!-- F8 CONSULTAR (MagnifyingGlass) -->
-                <Button Command="{Binding AbrirConsultaCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding AtalhoF8Command}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F8 Consultar">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#38BDF8" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="F8" Foreground="#38BDF8" FontWeight="Bold" FontSize="11" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentCyanBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F8" Foreground="{DynamicResource AccentCyanBrush}" FontWeight="Bold" FontSize="11" />
                         </Border>
                         <Path Data="M 15.5 14 h -.79 l -.28 -.27 C 15.41 12.59 16 11.11 16 9.5 C 16 5.91 13.09 3 9.5 3 S 3 5.91 3 9.5 S 5.91 16 9.5 16 c 1.61 0 3.09 -.59 4.23 -1.57 l .27 .28 v .79 l 5 4.99 L 20.49 19 l -4.99 -5 z m -6 0 C 7.01 14 5 11.99 5 9.5 S 7.01 5 9.5 5 S 14 7.01 14 9.5 S 11.99 14 9.5 14 z"
-                              Fill="#38BDF8" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Consultar" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource AccentCyanBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Consultar" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
                 <!-- F9 PAGAMENTO (CreditCard) -->
-                <Button Command="{Binding AbrirPagamentoCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding AbrirPagamentoCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="F9 Pagamento">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#34D399" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="F9" Foreground="#34D399" FontWeight="Bold" FontSize="11" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentGreenBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F9" Foreground="{DynamicResource AccentGreenBrush}" FontWeight="Bold" FontSize="11" />
                         </Border>
                         <Path Data="M 20 4 H 4 c -1.11 0 -1.99 .89 -1.99 2 L 2 18 c 0 1.11 .89 2 2 2 h 16 c 1.11 0 2 -.89 2 -2 V 6 c 0 -1.11 -.89 -2 -2 -2 z m 0 14 H 4 v -6 h 16 v 6 z m 0 -10 H 4 V 6 h 16 v 2 z"
-                              Fill="#34D399" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Pagamento" Foreground="#34D399" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource AccentGreenBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Pagamento" Foreground="{DynamicResource AccentGreenBrush}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
                 <!-- ESC CANCELAR (Prohibit) -->
-                <Button Command="{Binding CancelarVendaCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding CancelarVendaCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="Esc Cancelar venda">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="ESC" Foreground="#EF4444" FontWeight="Bold" FontSize="10" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentRedBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="ESC" Foreground="{DynamicResource AccentRedBrush}" FontWeight="Bold" FontSize="10" />
                         </Border>
                         <Path Data="M 12 2 C 6.48 2 2 6.48 2 12 s 4.48 10 10 10 10 -4.48 10 -10 S 17.52 2 12 2 z m 0 18 c -4.42 0 -8 -3.58 -8 -8 0 -1.85 .63 -3.55 1.69 -4.9 L 16.9 18.31 C 15.55 19.37 13.85 20 12 20 z m 6.31 -3.1 L 7.1 5.69 C 8.45 4.63 10.15 4 12 4 c 4.42 0 8 3.58 8 8 0 1.85 -.63 3.55 -1.69 4.9 z"
-                              Fill="#EF4444" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Cancelar" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource AccentRedBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Cancelar" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 
                 <!-- DEL REMOVER (Trash) -->
-                <Button Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}">
+                <Button Command="{Binding RemoverItemCommand}" Style="{StaticResource ShortcutButtonStyle}" AutomationProperties.Name="Delete Remover item">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="#080F1E" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="DEL" Foreground="#EF4444" FontWeight="Bold" FontSize="10" />
+                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentRedBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="DEL" Foreground="{DynamicResource AccentRedBrush}" FontWeight="Bold" FontSize="10" />
                         </Border>
                         <Path Data="M 6 19 c 0 1.1 .9 2 2 2 h 8 c 1.1 0 2 -.9 2 -2 V 7 H 6 v 12 z M 19 4 h -3.5 l -1 -1 h -5 l -1 1 H 5 v 2 h 14 V 4 z"
-                              Fill="#EF4444" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
-                        <TextBlock Text="Remover" Foreground="#F8FAFC" FontSize="11" VerticalAlignment="Center" />
+                              Fill="{DynamicResource AccentRedBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
+                        <TextBlock Text="Remover" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="11" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
             </UniformGrid>
@@ -419,10 +420,10 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Background="#1E293B" CornerRadius="3" Padding="6,2" Margin="4,0">
-                        <TextBlock Text="ONLINE" Foreground="#34D399" FontSize="11" FontWeight="Bold" />
+                    <Border Background="{DynamicResource SurfaceRaisedBrush}" CornerRadius="3" Padding="6,2" Margin="4,0">
+                        <TextBlock Text="ONLINE" Foreground="{DynamicResource AccentGreenBrush}" FontSize="11" FontWeight="Bold" />
                     </Border>
-                    <TextBlock Text="  PDV MERCADO v1.0" Foreground="#64748B" FontSize="11" VerticalAlignment="Center" />
+                    <TextBlock Text="  PDV MERCADO v1.0" Foreground="{DynamicResource MutedTextBrush}" FontSize="11" VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -474,9 +475,42 @@
                     <!-- Botões de Ação -->
                     <UniformGrid Grid.Row="3" Columns="2">
                         <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalConsultaCommand}" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
-                        <Button Content="ADICIONAR SELECIONADO (ENTER)" Command="{Binding AdicionarProdutoConsultaCommand}" IsDefault="True" Background="{DynamicResource AccentGreenBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
+                        <Button Content="ADICIONAR SELECIONADO (ENTER)" Command="{Binding AdicionarProdutoConsultaCommand}" IsDefault="True" Background="{DynamicResource SuccessActionBackgroundBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
                     </UniformGrid>
                 </Grid>
+            </Border>
+        </Grid>
+
+        <!-- MODAL F3: IDENTIFICAÇÃO SIMPLES DO CLIENTE -->
+        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalClienteAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="{DynamicResource OverlayBackgroundBrush}"
+              FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
+            <Border Background="{DynamicResource CardBackgroundBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="2" CornerRadius="8" Width="520" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
+                <StackPanel>
+                    <DockPanel Margin="0,0,0,16">
+                        <TextBlock Text="IDENTIFICAR CLIENTE (F3)" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="18" FontWeight="Bold" />
+                        <Button Content="FECHAR — ESC" Command="{Binding FecharModalClienteCommand}" Background="Transparent" Foreground="{DynamicResource SecondaryTextBrush}" BorderThickness="0" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Cursor="Hand" />
+                    </DockPanel>
+
+                    <TextBlock Text="NOME DO CLIENTE:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
+                    <TextBox x:Name="TxtClienteNome"
+                             Text="{Binding ClienteNomeInput, UpdateSourceTrigger=PropertyChanged}"
+                             Background="{DynamicResource InputBackgroundBrush}"
+                             Foreground="{DynamicResource PrimaryTextBrush}"
+                             BorderBrush="{DynamicResource AccentBlueBrush}"
+                             BorderThickness="2"
+                             FontSize="18"
+                             Padding="10,7"
+                             Margin="0,0,0,8" />
+                    <TextBlock Text="Deixe em branco para usar consumidor não identificado."
+                               Foreground="{DynamicResource MutedTextBrush}"
+                               FontSize="12"
+                               Margin="0,0,0,16" />
+
+                    <UniformGrid Columns="2">
+                        <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalClienteCommand}" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
+                        <Button Content="CONFIRMAR (ENTER)" Command="{Binding ConfirmarClienteCommand}" IsDefault="True" Background="{DynamicResource AccentBlueBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
+                    </UniformGrid>
+                </StackPanel>
             </Border>
         </Grid>
 
@@ -501,7 +535,7 @@
 
                     <UniformGrid Columns="2">
                         <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalDescontoCommand}" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
-                        <Button Content="APLICAR (ENTER)" Command="{Binding ConfirmarDescontoCommand}" IsDefault="True" Background="{DynamicResource AccentYellowBrush}" Foreground="#111827" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
+                        <Button Content="APLICAR (ENTER)" Command="{Binding ConfirmarDescontoCommand}" IsDefault="True" Background="{DynamicResource AccentYellowBrush}" Foreground="{DynamicResource OnWarningTextBrush}" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
                     </UniformGrid>
                 </StackPanel>
             </Border>
@@ -574,7 +608,7 @@
                     <!-- Botões Ação Modal -->
                     <UniformGrid Columns="2">
                         <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalPagamentoCommand}" Background="{DynamicResource ButtonNeutralBrush}" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="14" FontWeight="Bold" Padding="12" Margin="0,0,6,0" />
-                        <Button Content="CONFIRMAR (ENTER)" Command="{Binding ConfirmarPagamentoCommand}" IsDefault="True" Background="{DynamicResource AccentGreenBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="12" Margin="6,0,0,0" />
+                        <Button Content="CONFIRMAR (ENTER)" Command="{Binding ConfirmarPagamentoCommand}" IsDefault="True" Background="{DynamicResource SuccessActionBackgroundBrush}" Foreground="{DynamicResource OnAccentTextBrush}" FontSize="14" FontWeight="Bold" Padding="12" Margin="6,0,0,0" />
                     </UniformGrid>
                 </StackPanel>
             </Border>

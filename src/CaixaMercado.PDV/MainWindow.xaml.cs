@@ -28,6 +28,7 @@ public partial class MainWindow : Window
         {
             _viewModel = vm;
             vm.RequestFocusEan += FocarCampoEan;
+            vm.RequestFocusQuantidade += FocarCampoQuantidade;
             vm.PropertyChanged += MainViewModel_PropertyChanged;
         }
 
@@ -45,6 +46,7 @@ public partial class MainWindow : Window
         if (_viewModel == null) return;
 
         _viewModel.RequestFocusEan -= FocarCampoEan;
+        _viewModel.RequestFocusQuantidade -= FocarCampoQuantidade;
         _viewModel.PropertyChanged -= MainViewModel_PropertyChanged;
 
         if (_themeService != null)
@@ -58,7 +60,8 @@ public partial class MainWindow : Window
         if (e.PropertyName is nameof(MainViewModel.IsModalPagamentoAberto)
             or nameof(MainViewModel.IsModalConsultaAberta)
             or nameof(MainViewModel.IsModalDescontoAberto)
-            or nameof(MainViewModel.IsModalConfirmarCancelarAberto))
+            or nameof(MainViewModel.IsModalConfirmarCancelarAberto)
+            or nameof(MainViewModel.IsModalClienteAberto))
         {
             FocarModalAtivo();
         }
@@ -89,6 +92,10 @@ public partial class MainWindow : Window
             {
                 FocarCampoModal(TxtFiltroConsulta, selecionarConteudo: true);
             }
+            else if (_viewModel.IsModalClienteAberto)
+            {
+                FocarCampoModal(TxtClienteNome, selecionarConteudo: true);
+            }
             else if (_viewModel.IsModalDescontoAberto)
             {
                 FocarCampoModal(TxtValorDesconto, selecionarConteudo: true);
@@ -101,6 +108,18 @@ public partial class MainWindow : Window
             {
                 FocarCampoEan();
             }
+        }));
+    }
+
+    private void FocarCampoQuantidade()
+    {
+        if (_viewModel?.TemModalAberto == true) return;
+
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            TxtQuantidadeInput.Focus();
+            Keyboard.Focus(TxtQuantidadeInput);
+            TxtQuantidadeInput.SelectAll();
         }));
     }
 
