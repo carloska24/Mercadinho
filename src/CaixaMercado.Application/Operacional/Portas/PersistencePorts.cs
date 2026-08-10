@@ -1,6 +1,9 @@
 using CaixaMercado.Application.Operacional.Contratos;
 using CaixaMercado.Domain.Model.Catalogo;
 using CaixaMercado.Domain.Model.Vendas;
+using CaixaMercado.Domain.Model.Caixas;
+using CaixaMercado.Domain.Model.Estoque;
+using CaixaMercado.Domain.Model.Auditoria;
 
 namespace CaixaMercado.Application.Operacional.Portas;
 
@@ -31,6 +34,36 @@ public interface IUnitOfWork
 public interface IClock
 {
     DateTimeOffset UtcNow { get; }
+}
+
+public interface ISessaoCaixaRepository
+{
+    Task<SessaoCaixa?> ObterAsync(Guid sessaoId, CancellationToken cancellationToken);
+    Task<SessaoCaixa?> ObterAbertaPorTerminalAsync(Guid terminalId, CancellationToken cancellationToken);
+    Task AdicionarAsync(SessaoCaixa sessao, CancellationToken cancellationToken);
+    Task AtualizarAsync(SessaoCaixa sessao, long versaoEsperada, CancellationToken cancellationToken);
+}
+
+public interface IPagamentoVendaRepository
+{
+    Task AdicionarAsync(IReadOnlyCollection<PagamentoVenda> pagamentos, CancellationToken cancellationToken);
+}
+
+public interface IEstoqueRepository
+{
+    /// <summary>Agenda uma baixa condicional. Deve retornar false sem confirmar saldo negativo.</summary>
+    Task<bool> TentarBaixarAsync(MovimentoEstoque movimento, CancellationToken cancellationToken);
+}
+
+public interface IMovimentoCaixaRepository
+{
+    Task AdicionarAsync(IReadOnlyCollection<MovimentoCaixa> movimentos, CancellationToken cancellationToken);
+    Task<decimal> ObterRecebimentoLiquidoDinheiroAsync(Guid sessaoCaixaId, CancellationToken cancellationToken);
+}
+
+public interface IAuditoriaRepository
+{
+    Task AdicionarAsync(EventoAuditoria evento, CancellationToken cancellationToken);
 }
 
 public sealed record RegistroIdempotencia(
@@ -67,4 +100,10 @@ public sealed class ConflitoIdempotenciaException : Exception
         : base(mensagem ?? "A chave de idempotência foi registrada simultaneamente.", innerException)
     {
     }
+}
+
+public sealed class ConflitoSessaoCaixaException : Exception
+{
+    public ConflitoSessaoCaixaException(string? mensagem = null, Exception? innerException = null)
+        : base(mensagem ?? "Já existe uma sessão aberta para o terminal.", innerException) { }
 }

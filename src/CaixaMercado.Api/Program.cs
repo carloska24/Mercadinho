@@ -1,6 +1,7 @@
 using CaixaMercado.Api.Infrastructure;
 using CaixaMercado.Api.Features.Produtos;
 using CaixaMercado.Api.Features.Vendas;
+using CaixaMercado.Api.Features.Caixas;
 using CaixaMercado.Application;
 using CaixaMercado.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -62,6 +63,8 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions
 
 app.MapProdutosEndpoints();
 app.MapVendasEndpoints();
+app.MapCaixasEndpoints();
+app.MapFinalizacaoVendaEndpoints();
 
 app.Run();
 

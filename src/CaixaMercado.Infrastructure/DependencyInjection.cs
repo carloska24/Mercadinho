@@ -29,6 +29,11 @@ public static class DependencyInjection
         services.AddScoped<IVendaRepository, VendaRepository>();
         services.AddScoped<IIdempotencyStore, IdempotencyStore>();
         services.AddScoped<IUnitOfWork, EfUnitOfWork>();
+        services.AddScoped<ISessaoCaixaRepository, SessaoCaixaRepository>();
+        services.AddScoped<IEstoqueRepository, EstoqueRepository>();
+        services.AddScoped<IPagamentoVendaRepository, PagamentoVendaRepository>();
+        services.AddScoped<IMovimentoCaixaRepository, MovimentoCaixaRepository>();
+        services.AddScoped<IAuditoriaRepository, AuditoriaRepository>();
         services.AddSingleton<IClock, SystemClock>();
         services.AddHealthChecks()
             .AddCheck<PostgreSqlHealthCheck>("postgresql", tags: ["ready"]);

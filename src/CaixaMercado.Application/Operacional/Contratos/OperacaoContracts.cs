@@ -1,5 +1,6 @@
 using CaixaMercado.Domain.Model.Catalogo;
 using CaixaMercado.Domain.Model.Vendas;
+using CaixaMercado.Domain.Model.Caixas;
 
 namespace CaixaMercado.Application.Operacional.Contratos;
 
@@ -13,7 +14,11 @@ public enum CodigoOperacao
     ConflitoVersao = 5,
     ChaveIdempotenciaReutilizada = 6,
     RegraNegocioViolada = 7,
-    ConflitoIdempotencia = 8
+    ConflitoIdempotencia = 8,
+    SessaoCaixaNaoEncontrada = 9,
+    SessaoCaixaJaAberta = 10,
+    SessaoCaixaFechada = 11,
+    EstoqueInsuficiente = 12
 }
 
 public sealed record ResultadoOperacao<T>(CodigoOperacao Codigo, T? Dados, string? Mensagem = null)
@@ -83,3 +88,26 @@ public sealed record AdicionarItemVendaCommand(
     decimal Quantidade,
     long VersaoEsperada,
     string ChaveIdempotencia);
+
+public sealed record SessaoCaixaDto(Guid Id, Guid FilialId, Guid TerminalId, Guid OperadorAberturaId,
+    decimal ValorAbertura, DateTimeOffset AbertaEmUtc, StatusSessaoCaixa Status,
+    Guid? OperadorFechamentoId, decimal? ValorEsperadoFechamento, decimal? ValorContadoFechamento,
+    decimal? DiferencaFechamento, DateTimeOffset? FechadaEmUtc, long Versao);
+
+public sealed record AbrirSessaoCaixaCommand(Guid SessaoCaixaId, Guid FilialId, Guid TerminalId,
+    Guid OperadorId, decimal ValorAbertura, string ChaveIdempotencia);
+
+public sealed record FecharSessaoCaixaCommand(Guid SessaoCaixaId, Guid TerminalId, Guid OperadorId,
+    decimal ValorContado, long VersaoEsperada, string ChaveIdempotencia);
+
+public sealed record PagamentoCommand(Guid PagamentoId, FormaPagamentoOperacional Forma,
+    decimal ValorAplicado, StatusPagamentoOperacional Status, decimal? ValorRecebidoDinheiro = null,
+    string? ReferenciaExterna = null);
+
+public sealed record FinalizarVendaCommand(Guid VendaId, Guid TerminalId, Guid OperadorId,
+    long VersaoEsperada, IReadOnlyList<PagamentoCommand> Pagamentos, string ChaveIdempotencia,
+    Guid? AutorizacaoId = null, string? CorrelationId = null);
+
+public sealed record FinalizacaoVendaDto(Guid VendaId, long? Numero, long Versao,
+    StatusVendaOperacional Status, decimal Total, decimal Troco,
+    int QuantidadePagamentos, int QuantidadeMovimentosEstoque);

@@ -7,8 +7,6 @@ namespace CaixaMercado.Api.Features.Vendas;
 
 internal static class VendasEndpoints
 {
-    private const string IdempotencyHeader = "Idempotency-Key";
-
     public static IEndpointRouteBuilder MapVendasEndpoints(this IEndpointRouteBuilder endpoints)
     {
         var group = endpoints.MapGroup("/api/v1/vendas").WithTags("Vendas");
@@ -43,7 +41,7 @@ internal static class VendasEndpoints
         [FromServices] IVendaApplicationService vendas,
         CancellationToken cancellationToken)
     {
-        if (!TryGetIdempotencyKey(httpRequest, out var chave, out var erro)) return erro!;
+        if (!IdempotencyKey.TryGet(httpRequest, out var chave, out var erro)) return erro!;
         if (request.VendaId == Guid.Empty || request.FilialId == Guid.Empty || request.TerminalId == Guid.Empty ||
             request.SessaoCaixaId == Guid.Empty || request.OperadorId == Guid.Empty)
             return ResultadoOperacaoHttpExtensions.RequisicaoInvalida(
@@ -80,7 +78,7 @@ internal static class VendasEndpoints
         [FromServices] IVendaApplicationService vendas,
         CancellationToken cancellationToken)
     {
-        if (!TryGetIdempotencyKey(httpRequest, out var chave, out var erro)) return erro!;
+        if (!IdempotencyKey.TryGet(httpRequest, out var chave, out var erro)) return erro!;
         if (id == Guid.Empty || request.TerminalId == Guid.Empty)
             return ResultadoOperacaoHttpExtensions.RequisicaoInvalida(
                 "IdentificadoresObrigatorios", "Venda e terminal são obrigatórios.");
@@ -105,20 +103,6 @@ internal static class VendasEndpoints
         return resultado.ParaHttp(Results.Ok);
     }
 
-    private static bool TryGetIdempotencyKey(HttpRequest request, out string? chave, out IResult? erro)
-    {
-        chave = request.Headers[IdempotencyHeader].FirstOrDefault()?.Trim();
-        if (!string.IsNullOrWhiteSpace(chave) && chave.Length <= 100)
-        {
-            erro = null;
-            return true;
-        }
-
-        erro = ResultadoOperacaoHttpExtensions.RequisicaoInvalida(
-            "ChaveIdempotenciaObrigatoria",
-            $"O cabeçalho {IdempotencyHeader} é obrigatório e deve ter até 100 caracteres.");
-        return false;
-    }
 }
 
 public sealed record CriarVendaRequest(

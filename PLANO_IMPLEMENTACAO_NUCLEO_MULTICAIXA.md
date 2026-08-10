@@ -43,6 +43,37 @@ Objetivo: finalizar vendas de forma atômica.
 
 Critério de aceite: venda, pagamento, estoque, caixa e auditoria confirmam juntos ou não confirmam; reinício e retry não duplicam registros.
 
+### Recorte aprovado para a primeira entrega da fatia 2
+
+- uma única sessão aberta por terminal, garantida também por índice único parcial no PostgreSQL;
+- saldo materializado não negativo e razão de movimentos append-only por produto;
+- venda finalizada uma única vez, somente com sessão aberta, versão atual e itens válidos;
+- dinheiro pode ser aprovado internamente quando o valor recebido cobre o total;
+- Pix, débito e crédito somente podem finalizar quando houver confirmação externa explícita;
+- pagamento, baixa de estoque, movimento de caixa, venda e idempotência participam do mesmo commit;
+- integrações externas ficam fora da transação e serão tratadas por estado persistido/outbox em entrega posterior;
+- autenticação, TEF, fiscal, sangria, suprimento e fechamento cego completo não serão simulados nesta entrega.
+
+### Invariantes e falhas esperadas
+
+- duas finalizações concorrentes do último saldo produzem exatamente um sucesso;
+- estoque insuficiente não grava pagamento, movimento, venda parcial nem idempotência de sucesso;
+- repetição da mesma chave e conteúdo devolve o resultado anterior sem nova baixa;
+- mesma chave com conteúdo diferente retorna conflito;
+- meio eletrônico sem aprovação retorna estado pendente ou erro operacional, nunca sucesso;
+- falha antes do commit permite repetição segura; falha depois do commit é resolvida pela mesma chave idempotente.
+
+### Registro de decisões da fatia 2
+
+| Decisão | Alternativas consideradas | Motivo |
+|---|---|---|
+| Finalização em um único commit local | commits separados por módulo | elimina venda, estoque ou caixa parcialmente confirmados |
+| Ledger + saldo materializado | apenas campo de estoque | permite auditoria e consulta rápida sem perder reconciliação |
+| Concorrência otimista com constraint de saldo | lock longo ou estoque negativo | atende dois caixas com menor contenção e impede saldo inválido |
+| Eletrônico exige aprovação explícita | aprovar ao escolher a forma | evita venda finalizada sem recebimento comprovado |
+| Provedor externo fora da transação | chamada TEF/Pix dentro do commit | evita transação longa e resultado externo ambíguo |
+| PDV legado permanece desacoplado | trocar o WPF nesta fatia | mantém reversibilidade enquanto o núcleo transacional amadurece |
+
 ## Fatia 3 — Integração gradual do PDV
 
 - cliente HTTP tipado;

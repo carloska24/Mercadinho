@@ -12,12 +12,17 @@ internal static class ResultadoOperacaoHttpExtensions
         var status = resultado.Codigo switch
         {
             CodigoOperacao.RequisicaoInvalida => StatusCodes.Status400BadRequest,
-            CodigoOperacao.ProdutoNaoEncontrado or CodigoOperacao.VendaNaoEncontrada => StatusCodes.Status404NotFound,
+            CodigoOperacao.ProdutoNaoEncontrado or
+                CodigoOperacao.VendaNaoEncontrada or
+                CodigoOperacao.SessaoCaixaNaoEncontrada => StatusCodes.Status404NotFound,
             CodigoOperacao.RegraNegocioViolada => StatusCodes.Status422UnprocessableEntity,
             CodigoOperacao.IdentificadorProdutoAmbiguo or
                 CodigoOperacao.ConflitoVersao or
                 CodigoOperacao.ChaveIdempotenciaReutilizada or
-                CodigoOperacao.ConflitoIdempotencia => StatusCodes.Status409Conflict,
+                CodigoOperacao.ConflitoIdempotencia or
+                CodigoOperacao.SessaoCaixaJaAberta or
+                CodigoOperacao.SessaoCaixaFechada or
+                CodigoOperacao.EstoqueInsuficiente => StatusCodes.Status409Conflict,
             _ => StatusCodes.Status500InternalServerError
         };
 
@@ -37,6 +42,17 @@ internal static class ResultadoOperacaoHttpExtensions
             detail: detalhe,
             type: $"urn:caixa-mercado:erro:{ParaKebabCase(codigo)}",
             extensions: new Dictionary<string, object?> { ["codigo"] = codigo });
+
+    public static IResult IntegracaoPagamentoIndisponivel() =>
+        Results.Problem(
+            statusCode: StatusCodes.Status422UnprocessableEntity,
+            title: "Integração de pagamento indisponível",
+            detail: "Pix, cartão e voucher somente poderão ser finalizados após confirmação de um provedor confiável.",
+            type: "urn:caixa-mercado:erro:integracao-pagamento-indisponivel",
+            extensions: new Dictionary<string, object?>
+            {
+                ["codigo"] = "IntegracaoPagamentoIndisponivel"
+            });
 
     private static string Titulo(int status) => status switch
     {

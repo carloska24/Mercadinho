@@ -113,6 +113,25 @@ public sealed class Venda
         IncrementarVersao();
     }
 
+    public void Finalizar(IReadOnlyCollection<PagamentoVenda> pagamentos)
+    {
+        if (Status is not (StatusVendaOperacional.Aberta or StatusVendaOperacional.AguardandoPagamento))
+            throw new InvalidOperationException("A venda não pode ser finalizada no estado atual.");
+        ArgumentNullException.ThrowIfNull(pagamentos);
+        if (_itens.Count == 0) throw new InvalidOperationException("Venda vazia não pode ser finalizada.");
+        if (pagamentos.Count == 0) throw new InvalidOperationException("A venda exige ao menos um pagamento.");
+        if (pagamentos.Any(p => p.VendaId != Id || p.SessaoCaixaId != SessaoCaixaId))
+            throw new InvalidOperationException("Todos os pagamentos devem pertencer à venda e à sessão de caixa.");
+        if (pagamentos.Select(p => p.Id).Distinct().Count() != pagamentos.Count)
+            throw new InvalidOperationException("Existem pagamentos duplicados.");
+        if (pagamentos.Any(p => p.Status != StatusPagamentoOperacional.Aprovado))
+            throw new InvalidOperationException("Todos os pagamentos devem estar aprovados.");
+        if (pagamentos.Sum(p => p.ValorAplicado) != Total)
+            throw new InvalidOperationException("A soma dos pagamentos deve ser igual ao total da venda.");
+        Status = StatusVendaOperacional.Finalizada;
+        IncrementarVersao();
+    }
+
     public void Cancelar()
     {
         if (Status is not (StatusVendaOperacional.Aberta or StatusVendaOperacional.AguardandoPagamento))
