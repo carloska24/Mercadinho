@@ -27,15 +27,15 @@ public class ShortcutWiringTests
             Assert.Contains(key, inputKeys);
         }
 
-        AssertButtonHasCommand(document, presentation, "Produto");
-        AssertButtonHasCommand(document, presentation, "Cliente");
-        AssertButtonHasCommand(document, presentation, "Qtd");
-        AssertButtonHasCommand(document, presentation, "Desconto");
-        AssertButtonHasCommand(document, presentation, "Canc Item");
-        AssertButtonHasCommand(document, presentation, "Consultar");
-        AssertButtonHasCommand(document, presentation, "Pagamento");
-        AssertButtonHasCommand(document, presentation, "Cancelar");
-        AssertButtonHasCommand(document, presentation, "Remover");
+        AssertButtonHasCommand(document, presentation, "F2 Produto");
+        AssertButtonHasCommand(document, presentation, "F3 Cliente");
+        AssertButtonHasCommand(document, presentation, "F4 Quantidade");
+        AssertButtonHasCommand(document, presentation, "F6 Desconto");
+        AssertButtonHasCommand(document, presentation, "F7 Cancelar item");
+        AssertButtonHasCommand(document, presentation, "F8 Consultar");
+        AssertButtonHasCommand(document, presentation, "F9 Pagamento");
+        AssertButtonHasCommand(document, presentation, "Esc Cancelar venda");
+        AssertButtonHasCommand(document, presentation, "Delete Remover item");
     }
 
     [Fact]
@@ -64,19 +64,17 @@ public class ShortcutWiringTests
         Assert.Equal(inheritedForeground, (string?)label.Attribute("Foreground"));
     }
 
-    private static void AssertButtonHasCommand(XDocument document, XNamespace presentation, string label)
+    private static void AssertButtonHasCommand(XDocument document, XNamespace presentation, string accessibleName)
     {
         var button = document
             .Descendants(presentation + "Button")
-            .FirstOrDefault(candidate => candidate
-                .Descendants(presentation + "TextBlock")
-                .Any(text => string.Equals((string?)text.Attribute("Text"), label, StringComparison.Ordinal)));
+            .FirstOrDefault(candidate => string.Equals(
+                (string?)candidate.Attribute("AutomationProperties.Name"),
+                accessibleName,
+                StringComparison.Ordinal));
 
         Assert.NotNull(button);
         Assert.False(string.IsNullOrWhiteSpace((string?)button!.Attribute("Command")));
-        Assert.False(
-            string.IsNullOrWhiteSpace((string?)button.Attribute("AutomationProperties.Name")),
-            $"O botão '{label}' precisa de um nome acessível para operação e testes automatizados.");
     }
 
     private static string FindRepositoryRoot()

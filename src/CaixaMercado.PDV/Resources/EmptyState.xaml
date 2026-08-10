@@ -4,10 +4,10 @@
     <!-- Componente Reutilizável de Estado Vazio de Caixa (EmptySaleState com SVG Hero Oficial fi_9725740) -->
     <ControlTemplate x:Key="EmptySaleStateTemplate">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
                 
                 <!-- SVG Hero Oficial da Tela Principal (fi_9725740) - Sem moldura circular -->
-                <Viewbox Width="180" Height="180" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Viewbox Width="140" Height="140" HorizontalAlignment="Center" Margin="0,0,0,12">
                     <Viewbox.RenderTransform>
                         <TranslateTransform x:Name="CartFloat" Y="0" />
                     </Viewbox.RenderTransform>
@@ -64,18 +64,18 @@
                 </Viewbox>
 
                 <!-- Mensagem Principal de Estado -->
-                <TextBlock Text="CAIXA LIVRE" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="26" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                <TextBlock Text="CAIXA LIVRE" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="23" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,4" />
                 
                 <!-- Status Operacional -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,6">
                     <Ellipse Width="10" Height="10" Fill="{DynamicResource SuccessForegroundBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
                     <TextBlock Text="SCANNER PRONTO" Foreground="{DynamicResource SuccessForegroundBrush}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
                 </StackPanel>
 
-                <TextBlock Text="Aproxime o produto do scanner ou digite o código manualmente" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="14" HorizontalAlignment="Center" Margin="0,0,20,0" />
+                <TextBlock Text="Aproxime o produto do scanner ou digite o código manualmente" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="13" HorizontalAlignment="Center" Margin="0,0,10,0" />
 
                 <!-- Dica de Atalho com Destaque -->
-                <Border Background="{DynamicResource SaleAreaBackgroundBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="1.5" CornerRadius="20" Padding="16,8" HorizontalAlignment="Center">
+                <Border Background="{DynamicResource SaleAreaBackgroundBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="1.5" CornerRadius="20" Padding="12,6" HorizontalAlignment="Center">
                     <TextBlock Foreground="{DynamicResource AccentCyanBrush}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center">
                         <Run Text="F2" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" />
                         <Run Text=" — Consultar produto" />

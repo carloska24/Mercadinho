@@ -45,6 +45,9 @@ public class ModalInteractionStructureTests
         var successStatus = successTemplate.Descendants(Presentation + "Label")
             .Single(label => (string?)label.Attribute("AutomationProperties.AutomationId") == "StatusVendaConcluida");
         Assert.Equal("Assertive", (string?)successStatus.Attribute("AutomationProperties.LiveSetting"));
+
+        var codeBehind = File.ReadAllText(Path.Combine(ProjectDirectory(), "MainWindow.xaml.cs"));
+        Assert.Contains("RaiseAutomationEvent(AutomationEvents.LiveRegionChanged)", codeBehind, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -55,6 +58,23 @@ public class ModalInteractionStructureTests
         Assert.Contains("Property=\"SelectionOpacity\" Value=\"1\"", styles, StringComparison.Ordinal);
         Assert.Contains("Property=\"HorizontalContentAlignment\" Value=\"Center\"", styles, StringComparison.Ordinal);
         Assert.Contains("Property=\"VerticalContentAlignment\" Value=\"Center\"", styles, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void LayoutMinimo_PreservaDescricaoTotalEAtalhos()
+    {
+        var document = LoadMainWindow();
+        var source = File.ReadAllText(Path.Combine(ProjectDirectory(), "MainWindow.xaml"));
+        var styles = File.ReadAllText(Path.Combine(ProjectDirectory(), "Resources", "Styles.xaml"));
+
+        Assert.Contains("Width=\"68*\"", source, StringComparison.Ordinal);
+        Assert.Contains("Width=\"32*\"", source, StringComparison.Ordinal);
+        Assert.Contains("MaxHeight=\"48\"", source, StringComparison.Ordinal);
+        Assert.Contains("MaxWidth=\"130\" TextTrimming=\"CharacterEllipsis\"", source, StringComparison.Ordinal);
+        Assert.Contains("ToolbarShortcutButtonStyle", styles, StringComparison.Ordinal);
+
+        var emptyState = File.ReadAllText(Path.Combine(ProjectDirectory(), "Resources", "EmptyState.xaml"));
+        Assert.Contains("Width=\"140\" Height=\"140\"", emptyState, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -87,6 +107,16 @@ public class ModalInteractionStructureTests
         Assert.Equal("MainWindow_PreviewTextInput", (string?)window.Attribute("PreviewTextInput"));
         Assert.DoesNotContain(document.Descendants(Presentation + "KeyBinding"),
             binding => string.Equals((string?)binding.Attribute("Key"), "Delete", StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void Consulta_EnterDentroDaCelulaTemTratamentoExplicito()
+    {
+        var document = LoadMainWindow();
+        var grid = document.Descendants(Presentation + "DataGrid")
+            .Single(element => (string?)element.Attribute(XName.Get("Name", "http://schemas.microsoft.com/winfx/2006/xaml")) == "GridProdutosConsulta");
+
+        Assert.Equal("GridProdutosConsulta_PreviewKeyDown", (string?)grid.Attribute("PreviewKeyDown"));
     }
 
     [Fact]

@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Automation;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CaixaMercado.PDV.Services;
@@ -60,6 +61,12 @@ public partial class MainWindow : Window
 
     private void MainViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
+        if (e.PropertyName == nameof(MainViewModel.IsVendaConcluidaVisivel)
+            && _viewModel?.IsVendaConcluidaVisivel == true)
+        {
+            Dispatcher.BeginInvoke(AnunciarVendaConcluida);
+        }
+
         if (e.PropertyName is nameof(MainViewModel.IsModalPagamentoAberto)
             or nameof(MainViewModel.IsModalConsultaAberta)
             or nameof(MainViewModel.IsModalDescontoAberto)
@@ -68,6 +75,16 @@ public partial class MainWindow : Window
         {
             FocarModalAtivo();
         }
+    }
+
+    private void AnunciarVendaConcluida()
+    {
+        VendaConcluidaControl.ApplyTemplate();
+        if (VendaConcluidaControl.Template.FindName("StatusVendaConcluida", VendaConcluidaControl) is not UIElement status) return;
+
+        var peer = UIElementAutomationPeer.FromElement(status)
+            ?? UIElementAutomationPeer.CreatePeerForElement(status);
+        peer?.RaiseAutomationEvent(AutomationEvents.LiveRegionChanged);
     }
 
     private void FocarCampoEan()
@@ -176,6 +193,19 @@ public partial class MainWindow : Window
         TxtEanInput.SelectedText = e.Text;
         TxtEanInput.CaretIndex = TxtEanInput.Text.Length;
         e.Handled = true;
+    }
+
+    private void GridProdutosConsulta_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key != Key.Enter || _viewModel == null) return;
+
+        // O DataGrid consome ENTER quando uma célula está focada. Interceptamos antes
+        // para cumprir a ação anunciada no modal: adicionar o produto selecionado.
+        if (_viewModel.AdicionarProdutoConsultaCommand.CanExecute(null))
+        {
+            _viewModel.AdicionarProdutoConsultaCommand.Execute(null);
+            e.Handled = true;
+        }
     }
 
     private void ThemeService_ThemeChanged(object? sender, EventArgs e)

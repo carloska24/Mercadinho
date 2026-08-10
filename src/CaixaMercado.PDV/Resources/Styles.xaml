@@ -4,7 +4,7 @@
     <!-- Estilo para Borda de Card -->
     <Style x:Key="PdvCardStyle" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource CardBackgroundBrush}" />
-        <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ControlBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="6" />
         <Setter Property="Padding" Value="12" />
@@ -197,6 +197,11 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ToolbarShortcutButtonStyle" TargetType="Button" BasedOn="{StaticResource ShortcutButtonStyle}">
+        <Setter Property="Padding" Value="2,4" />
+        <Setter Property="Margin" Value="1,1" />
+    </Style>
+
     <!-- Botão de Ação Destacado (Pagamento F9) -->
     <Style x:Key="PrimaryActionButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{DynamicResource SuccessActionBackgroundBrush}" />
@@ -322,7 +327,7 @@
                         <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
                         <Border x:Name="Bullet" Width="18" Height="18" CornerRadius="9"
                                 Background="{DynamicResource InputBackgroundBrush}"
-                                BorderBrush="{DynamicResource CardBorderBrush}" BorderThickness="2" VerticalAlignment="Center">
+                                BorderBrush="{DynamicResource ControlBorderBrush}" BorderThickness="2" VerticalAlignment="Center">
                             <Ellipse x:Name="Mark" Width="8" Height="8" Fill="{DynamicResource AccentYellowBrush}" Visibility="Collapsed" />
                         </Border>
                         <ContentPresenter Grid.Column="1" Margin="7,0,0,0" VerticalAlignment="Center" />

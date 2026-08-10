@@ -7,6 +7,7 @@
     <SolidColorBrush x:Key="SaleAreaBackgroundBrush" Color="#F8FAFC" />
     <SolidColorBrush x:Key="InputBackgroundBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="InputBorderBrush" Color="#2563EB" />
+    <SolidColorBrush x:Key="ControlBorderBrush" Color="#64748B" />
     <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="#EAF0F7" />
     <SolidColorBrush x:Key="SurfaceSunkenBrush" Color="#E2E8F0" />
     <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="#B3475568" />

@@ -13,6 +13,7 @@ public class ThemeDictionaryTests
         "SaleAreaBackgroundBrush",
         "InputBackgroundBrush",
         "InputBorderBrush",
+        "ControlBorderBrush",
         "SurfaceRaisedBrush",
         "SurfaceSunkenBrush",
         "OverlayBackgroundBrush",
@@ -101,6 +102,7 @@ public class ThemeDictionaryTests
         AssertContrast(brushes, "SecondaryTextBrush", "CardBackgroundBrush", 4.5);
         AssertContrast(brushes, "DisabledForegroundBrush", "DisabledBackgroundBrush", 4.5);
         AssertContrast(brushes, "InputSelectionTextBrush", "InputSelectionBrush", 4.5);
+        AssertContrast(brushes, "ControlBorderBrush", "InputBackgroundBrush", 3.0);
         AssertContrast(brushes, "OnAccentTextBrush", "AccentBlueBrush", 4.5);
         AssertContrast(brushes, "OnAccentTextBrush", "SuccessActionBackgroundBrush", 4.5);
         AssertContrast(brushes, "OnWarningTextBrush", "AccentYellowBrush", 4.5);

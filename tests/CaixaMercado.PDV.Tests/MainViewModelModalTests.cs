@@ -53,7 +53,7 @@ public class MainViewModelModalTests
     }
 
     [Fact]
-    public void EnterDuranteConsulta_AdicionaProdutoSelecionadoEFechaModal()
+    public void AcaoPrincipalDuranteConsulta_AdicionaProdutoSelecionadoEFechaModal()
     {
         var viewModel = new MainViewModel(new VendaService());
         viewModel.AbrirConsultaCommand.Execute(null);
