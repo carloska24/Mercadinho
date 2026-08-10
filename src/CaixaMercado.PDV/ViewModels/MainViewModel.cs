@@ -85,8 +85,9 @@ public class MainViewModel : ViewModelBase
             {
                 TipoPagamentoSelecionado = parsed;
             }
-        });
+        }, _ => IsModalPagamentoAberto);
 
+        ExecutarAcaoPrincipalCommand = new RelayCommand(ExecutarAcaoPrincipal);
         SolicitarFocoEanCommand = new RelayCommand(SolicitarFocoEan);
 
         AtualizarDadosVenda();
@@ -150,7 +151,14 @@ public class MainViewModel : ViewModelBase
     public bool IsModalPagamentoAberto
     {
         get => _isModalPagamentoAberto;
-        set => SetProperty(ref _isModalPagamentoAberto, value);
+        set
+        {
+            if (SetProperty(ref _isModalPagamentoAberto, value))
+            {
+                OnPropertyChanged(nameof(TemModalAberto));
+                (SelecionarFormaPagamentoCommand as RelayCommand)?.RaiseCanExecuteChanged();
+            }
+        }
     }
 
     public decimal ValorPagoInput
@@ -195,7 +203,13 @@ public class MainViewModel : ViewModelBase
     public bool IsModalConsultaAberta
     {
         get => _isModalConsultaAberta;
-        set => SetProperty(ref _isModalConsultaAberta, value);
+        set
+        {
+            if (SetProperty(ref _isModalConsultaAberta, value))
+            {
+                OnPropertyChanged(nameof(TemModalAberto));
+            }
+        }
     }
 
     public string FiltroConsulta
@@ -226,7 +240,13 @@ public class MainViewModel : ViewModelBase
     public bool IsModalDescontoAberto
     {
         get => _isModalDescontoAberto;
-        set => SetProperty(ref _isModalDescontoAberto, value);
+        set
+        {
+            if (SetProperty(ref _isModalDescontoAberto, value))
+            {
+                OnPropertyChanged(nameof(TemModalAberto));
+            }
+        }
     }
 
     public decimal ValorDescontoInput
@@ -238,7 +258,25 @@ public class MainViewModel : ViewModelBase
     public bool IsDescontoPercentual
     {
         get => _isDescontoPercentual;
-        set => SetProperty(ref _isDescontoPercentual, value);
+        set
+        {
+            if (SetProperty(ref _isDescontoPercentual, value))
+            {
+                OnPropertyChanged(nameof(IsDescontoValorFixo));
+            }
+        }
+    }
+
+    public bool IsDescontoValorFixo
+    {
+        get => !IsDescontoPercentual;
+        set
+        {
+            if (value)
+            {
+                IsDescontoPercentual = false;
+            }
+        }
     }
 
     // Estado Venda Concluída (Feedback 2.5s)
@@ -248,7 +286,13 @@ public class MainViewModel : ViewModelBase
     public bool IsModalConfirmarCancelarAberto
     {
         get => _isModalConfirmarCancelarAberto;
-        set => SetProperty(ref _isModalConfirmarCancelarAberto, value);
+        set
+        {
+            if (SetProperty(ref _isModalConfirmarCancelarAberto, value))
+            {
+                OnPropertyChanged(nameof(TemModalAberto));
+            }
+        }
     }
 
     public bool IsVendaConcluidaVisivel
@@ -286,7 +330,13 @@ public class MainViewModel : ViewModelBase
     public ICommand ConfirmarDescontoCommand { get; }
     public ICommand FecharModalDescontoCommand { get; }
     public ICommand SelecionarFormaPagamentoCommand { get; }
+    public ICommand ExecutarAcaoPrincipalCommand { get; }
     public ICommand SolicitarFocoEanCommand { get; }
+
+    public bool TemModalAberto => IsModalPagamentoAberto
+        || IsModalConsultaAberta
+        || IsModalDescontoAberto
+        || IsModalConfirmarCancelarAberto;
 
     private void ExecutarAdicionarItem()
     {
@@ -336,6 +386,8 @@ public class MainViewModel : ViewModelBase
 
     private void ExecutarAbrirPagamento()
     {
+        if (TemModalAberto) return;
+
         if (Itens.Count == 0)
         {
             MensagemStatus = "IMPOSSÍVEL ABRIR PAGAMENTO SEM ITENS NA VENDA";
@@ -378,7 +430,6 @@ public class MainViewModel : ViewModelBase
         {
             MensagemErroModal = erro;
         }
-        SolicitarFocoEan();
     }
 
     private void ExecutarFecharModalPagamento()
@@ -389,9 +440,65 @@ public class MainViewModel : ViewModelBase
 
     private void ExecutarSolicitarCancelarVenda()
     {
+        if (IsModalPagamentoAberto)
+        {
+            ExecutarFecharModalPagamento();
+            return;
+        }
+
+        if (IsModalConsultaAberta)
+        {
+            IsModalConsultaAberta = false;
+            SolicitarFocoEan();
+            return;
+        }
+
+        if (IsModalDescontoAberto)
+        {
+            IsModalDescontoAberto = false;
+            SolicitarFocoEan();
+            return;
+        }
+
+        if (IsModalConfirmarCancelarAberto)
+        {
+            IsModalConfirmarCancelarAberto = false;
+            SolicitarFocoEan();
+            return;
+        }
+
         if (Itens.Count == 0) return;
 
         IsModalConfirmarCancelarAberto = true;
+    }
+
+    private void ExecutarAcaoPrincipal()
+    {
+        if (IsModalPagamentoAberto)
+        {
+            ExecutarConfirmarPagamento();
+            return;
+        }
+
+        if (IsModalConsultaAberta)
+        {
+            ExecutarAdicionarProdutoConsulta();
+            return;
+        }
+
+        if (IsModalDescontoAberto)
+        {
+            ExecutarConfirmarDesconto();
+            return;
+        }
+
+        if (IsModalConfirmarCancelarAberto)
+        {
+            ExecutarConfirmarCancelarVenda();
+            return;
+        }
+
+        ExecutarAdicionarItem();
     }
 
     private void ExecutarConfirmarCancelarVenda()
@@ -408,6 +515,17 @@ public class MainViewModel : ViewModelBase
 
     private void ExecutarAbrirConsulta()
     {
+        if (IsModalPagamentoAberto)
+        {
+            TipoPagamentoSelecionado = TipoPagamento.Pix;
+            return;
+        }
+
+        if (IsModalConsultaAberta || IsModalDescontoAberto || IsModalConfirmarCancelarAberto)
+        {
+            return;
+        }
+
         FiltroConsulta = string.Empty;
         ExecutarFiltrarProdutos();
         IsModalConsultaAberta = true;
@@ -435,6 +553,7 @@ public class MainViewModel : ViewModelBase
 
     private void ExecutarAbrirDesconto()
     {
+        if (TemModalAberto) return;
         if (Itens.Count == 0) return;
         ValorDescontoInput = 0m;
         IsDescontoPercentual = false;
@@ -467,6 +586,7 @@ public class MainViewModel : ViewModelBase
 
     private void SolicitarFocoEan()
     {
+        if (TemModalAberto) return;
         RequestFocusEan?.Invoke();
     }
 

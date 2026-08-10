@@ -1,0 +1,106 @@
+using CaixaMercado.Application.Services;
+using CaixaMercado.Domain.Enums;
+using CaixaMercado.PDV.ViewModels;
+
+namespace CaixaMercado.PDV.Tests;
+
+public class MainViewModelModalTests
+{
+    [Fact]
+    public void PagamentoInvalido_MantemModalAberto_SemSolicitarFocoNoEan()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+        viewModel.EanInput = "7891234567890";
+        viewModel.AdicionarItemCommand.Execute(null);
+        viewModel.AbrirPagamentoCommand.Execute(null);
+        viewModel.ValorPagoInput = 0m;
+
+        var solicitacoesDeFocoNoEan = 0;
+        viewModel.RequestFocusEan += () => solicitacoesDeFocoNoEan++;
+
+        viewModel.ConfirmarPagamentoCommand.Execute(null);
+
+        Assert.True(viewModel.IsModalPagamentoAberto);
+        Assert.True(viewModel.HasMensagemErroModal);
+        Assert.Equal(0, solicitacoesDeFocoNoEan);
+    }
+
+    [Fact]
+    public void F2DurantePagamento_NaoAbreConsultaSobreModal()
+    {
+        var viewModel = CriarVendaComPagamentoAberto();
+
+        viewModel.AbrirConsultaCommand.Execute(null);
+
+        Assert.True(viewModel.IsModalPagamentoAberto);
+        Assert.False(viewModel.IsModalConsultaAberta);
+        Assert.Equal(TipoPagamento.Pix, viewModel.TipoPagamentoSelecionado);
+    }
+
+    [Fact]
+    public void EscapeDurantePagamento_FechaPagamentoSemSolicitarCancelamentoDaVenda()
+    {
+        var viewModel = CriarVendaComPagamentoAberto();
+
+        viewModel.CancelarVendaCommand.Execute(null);
+
+        Assert.False(viewModel.IsModalPagamentoAberto);
+        Assert.False(viewModel.IsModalConfirmarCancelarAberto);
+        Assert.NotEmpty(viewModel.Itens);
+    }
+
+    [Fact]
+    public void EnterDuranteConsulta_AdicionaProdutoSelecionadoEFechaModal()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+        viewModel.AbrirConsultaCommand.Execute(null);
+
+        viewModel.ExecutarAcaoPrincipalCommand.Execute(null);
+
+        Assert.False(viewModel.IsModalConsultaAberta);
+        Assert.Single(viewModel.Itens);
+    }
+
+    [Fact]
+    public void FormaPagamento_SoPodeSerSelecionadaComPagamentoAberto()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+
+        Assert.False(viewModel.SelecionarFormaPagamentoCommand.CanExecute(TipoPagamento.CartaoDebito));
+
+        viewModel.EanInput = "7891234567890";
+        viewModel.AdicionarItemCommand.Execute(null);
+        viewModel.AbrirPagamentoCommand.Execute(null);
+
+        Assert.True(viewModel.SelecionarFormaPagamentoCommand.CanExecute(TipoPagamento.CartaoDebito));
+
+        viewModel.SelecionarFormaPagamentoCommand.Execute(TipoPagamento.CartaoDebito);
+
+        Assert.Equal(TipoPagamento.CartaoDebito, viewModel.TipoPagamentoSelecionado);
+    }
+
+    [Fact]
+    public void DescontoValorFixo_EInversoDoDescontoPercentual()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+
+        Assert.True(viewModel.IsDescontoValorFixo);
+
+        viewModel.IsDescontoPercentual = true;
+
+        Assert.False(viewModel.IsDescontoValorFixo);
+
+        viewModel.IsDescontoValorFixo = true;
+
+        Assert.False(viewModel.IsDescontoPercentual);
+    }
+
+    private static MainViewModel CriarVendaComPagamentoAberto()
+    {
+        var viewModel = new MainViewModel(new VendaService());
+        viewModel.EanInput = "7891234567890";
+        viewModel.AdicionarItemCommand.Execute(null);
+        viewModel.AbrirPagamentoCommand.Execute(null);
+        return viewModel;
+    }
+}

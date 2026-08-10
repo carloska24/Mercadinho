@@ -17,12 +17,16 @@
     </Window.DataContext>
 
     <Window.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.Dinheiro}" />
         <KeyBinding Key="F2" Command="{Binding AbrirConsultaCommand}" />
+        <KeyBinding Key="F3" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.CartaoDebito}" />
+        <KeyBinding Key="F4" Command="{Binding SelecionarFormaPagamentoCommand}" CommandParameter="{x:Static enums:TipoPagamento.CartaoCredito}" />
         <KeyBinding Key="F6" Command="{Binding AbrirDescontoCommand}" />
         <KeyBinding Key="F7" Command="{Binding RemoverItemCommand}" />
         <KeyBinding Key="F9" Command="{Binding AbrirPagamentoCommand}" />
         <KeyBinding Key="Delete" Command="{Binding RemoverItemCommand}" />
         <KeyBinding Key="Escape" Command="{Binding CancelarVendaCommand}" />
+        <KeyBinding Key="Return" Command="{Binding ExecutarAcaoPrincipalCommand}" />
     </Window.InputBindings>
 
     <Grid>
@@ -120,11 +124,7 @@
                             <TextBlock Text="CÓDIGO DE BARRAS / EAN / PLU (DIGITE OU LEIA NO SCANNER)" Foreground="{StaticResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,4" />
                             <TextBox x:Name="TxtEanInput"
                                      Text="{Binding EanInput, UpdateSourceTrigger=PropertyChanged}"
-                                     Style="{StaticResource EanTextBoxStyle}">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Key="Return" Command="{Binding AdicionarItemCommand}" />
-                                </TextBox.InputBindings>
-                            </TextBox>
+                                     Style="{StaticResource EanTextBoxStyle}" />
                         </StackPanel>
 
                         <!-- Botão Adicionar -->
@@ -418,7 +418,8 @@
         </Border>
 
         <!-- MODAL F2: CONSULTA DE PRODUTOS ERP -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalConsultaAberta, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#DD0F172A">
+        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalConsultaAberta, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#DD0F172A"
+              FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="#1E293B" BorderBrush="#3B82F6" BorderThickness="2" CornerRadius="8" Width="750" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -440,7 +441,7 @@
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Text="{Binding FiltroConsulta, UpdateSourceTrigger=PropertyChanged}" FontSize="16" Background="#020617" Foreground="#F8FAFC" BorderBrush="#3B82F6" BorderThickness="2" Padding="8,4" VerticalContentAlignment="Center" />
+                        <TextBox x:Name="TxtFiltroConsulta" Grid.Column="0" Text="{Binding FiltroConsulta, UpdateSourceTrigger=PropertyChanged}" FontSize="16" Background="#020617" Foreground="#F8FAFC" BorderBrush="#3B82F6" BorderThickness="2" Padding="8,4" VerticalContentAlignment="Center" />
                         <Button Grid.Column="2" Content="PESQUISAR" Command="{Binding FiltrarProdutosCommand}" Background="#3B82F6" Foreground="White" FontWeight="Bold" Padding="16,8" />
                     </Grid>
 
@@ -470,7 +471,8 @@
         </Grid>
 
         <!-- MODAL F6: DESCONTO DA VENDA -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalDescontoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#DD0F172A">
+        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalDescontoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#DD0F172A"
+              FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="#1E293B" BorderBrush="#F59E0B" BorderThickness="2" CornerRadius="8" Width="450" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
                 <StackPanel>
                     <DockPanel Margin="0,0,0,16">
@@ -480,12 +482,12 @@
 
                     <TextBlock Text="TIPO DE DESCONTO:" Foreground="#94A3B8" FontSize="12" FontWeight="Bold" Margin="0,0,0,8" />
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                        <RadioButton Content="Valor Fixo R$" IsChecked="{Binding IsDescontoPercentual, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=false}" Foreground="#F8FAFC" FontSize="14" FontWeight="Bold" Margin="0,0,20,0" />
+                        <RadioButton Content="Valor Fixo R$" IsChecked="{Binding IsDescontoValorFixo}" Foreground="#F8FAFC" FontSize="14" FontWeight="Bold" Margin="0,0,20,0" />
                         <RadioButton Content="Percentual %" IsChecked="{Binding IsDescontoPercentual}" Foreground="#F8FAFC" FontSize="14" FontWeight="Bold" />
                     </StackPanel>
 
                     <TextBlock Text="VALOR DO DESCONTO:" Foreground="#94A3B8" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
-                    <TextBox Text="{Binding ValorDescontoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" FontSize="24" FontWeight="Bold" Background="#020617" Foreground="#F59E0B" BorderBrush="#F59E0B" BorderThickness="2" Padding="10,6" Margin="0,0,0,16" />
+                    <TextBox x:Name="TxtValorDesconto" Text="{Binding ValorDescontoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" FontSize="24" FontWeight="Bold" Background="#020617" Foreground="#F59E0B" BorderBrush="#F59E0B" BorderThickness="2" Padding="10,6" Margin="0,0,0,16" />
 
                     <UniformGrid Columns="2">
                         <Button Content="CANCELAR (ESC)" Command="{Binding FecharModalDescontoCommand}" Background="#334155" Foreground="White" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
@@ -496,14 +498,15 @@
         </Grid>
 
         <!-- MODAL ESC: CONFIRMAÇÃO DE CANCELAMENTO DE VENDA -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalConfirmarCancelarAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#DD0F172A">
+        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalConfirmarCancelarAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#DD0F172A"
+              FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="#1E293B" BorderBrush="#EF4444" BorderThickness="2" CornerRadius="8" Width="450" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="20">
                 <StackPanel>
                     <TextBlock Text="⚠️ CANCELAR VENDA COMPLETA?" Foreground="#EF4444" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" HorizontalAlignment="Center" />
                     <TextBlock Text="Todos os itens registrados na venda atual serão removidos. Deseja realmente cancelar?" Foreground="#94A3B8" FontSize="14" TextWrapping="Wrap" Margin="0,0,0,20" TextAlignment="Center" />
 
                     <UniformGrid Columns="2">
-                        <Button Content="NÃO (ESC)" Command="{Binding FecharModalCancelarVendaCommand}" Background="#334155" Foreground="White" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
+                        <Button x:Name="BtnNaoCancelarVenda" Content="NÃO (ESC)" Command="{Binding FecharModalCancelarVendaCommand}" Background="#334155" Foreground="White" FontSize="14" FontWeight="Bold" Padding="10" Margin="0,0,6,0" />
                         <Button Content="SIM, CANCELAR" Command="{Binding ConfirmarCancelarVendaCommand}" Background="#EF4444" Foreground="White" FontSize="14" FontWeight="Bold" Padding="10" Margin="6,0,0,0" />
                     </UniformGrid>
                 </StackPanel>
@@ -511,7 +514,8 @@
         </Grid>
 
         <!-- MODAL F9: FINALIZAR PAGAMENTO -->
-        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalPagamentoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#CC0F172A">
+        <Grid Grid.RowSpan="4" Visibility="{Binding IsModalPagamentoAberto, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#CC0F172A"
+              FocusManager.IsFocusScope="True" KeyboardNavigation.TabNavigation="Cycle">
             <Border Background="#1E293B" BorderBrush="#3B82F6" BorderThickness="2" CornerRadius="8" Width="550" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="24">
                 <StackPanel>
                     <DockPanel Margin="0,0,0,16">
@@ -544,7 +548,7 @@
 
                     <!-- Campo Valor Recebido -->
                     <TextBlock Text="VALOR RECEBIDO R$:" Foreground="#94A3B8" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
-                    <TextBox Text="{Binding ValorPagoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" FontSize="24" FontWeight="Bold" Background="#020617" Foreground="#FACC15" BorderBrush="#3B82F6" BorderThickness="2" Padding="10,6" Margin="0,0,0,16" />
+                    <TextBox x:Name="TxtValorPago" Text="{Binding ValorPagoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" FontSize="24" FontWeight="Bold" Background="#020617" Foreground="#FACC15" BorderBrush="#3B82F6" BorderThickness="2" Padding="10,6" Margin="0,0,0,16" />
 
                     <!-- Troco Calculado -->
                     <Border Background="#0F172A" CornerRadius="6" Padding="12" Margin="0,0,0,16">
