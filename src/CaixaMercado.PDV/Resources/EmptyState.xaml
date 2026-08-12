@@ -1,86 +1,206 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Componente Reutilizável de Estado Vazio de Caixa (EmptySaleState com SVG Hero Oficial fi_9725740) -->
+    <!-- ESTADO VAZIO — CAIXA LIVRE (Scanner Edition)
+         Redesign: substitui carrinho colorido (clipart genérico, 6 famílias de cor fora do design system)
+         por ícone de scanner de código de barras (linguagem visual do design system, verde primário).
+
+         Princípios aplicados:
+         - Ícone contextual: o operador ESCANEIA produtos, não empurra carrinho
+         - Monocromático: usa apenas AccentGreenBrush + PrimaryTextBrush (zero cores fora do sistema)
+         - Animação funcional: scan line sobe/desce simulando leitura real
+         - Glow radial: preenche o vazio branco opressivo sem poluir
+         - Pulso no status: feedback visual de que o sistema está aguardando -->
     <ControlTemplate x:Key="EmptySaleStateTemplate">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12">
-                
-                <!-- SVG Hero Oficial da Tela Principal (fi_9725740) - Sem moldura circular -->
-                <Viewbox Width="140" Height="140" HorizontalAlignment="Center" Margin="0,0,0,12">
-                    <Viewbox.RenderTransform>
-                        <TranslateTransform x:Name="CartFloat" Y="0" />
-                    </Viewbox.RenderTransform>
-                    <Viewbox.Triggers>
-                        <EventTrigger RoutedEvent="Loaded">
-                            <BeginStoryboard>
-                                <Storyboard RepeatBehavior="Forever">
-                                    <DoubleAnimation Storyboard.TargetName="CartFloat"
-                                                     Storyboard.TargetProperty="Y"
-                                                     From="0" To="-6" Duration="0:0:2.0" AutoReverse="True" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger>
-                    </Viewbox.Triggers>
 
-                    <Canvas Width="512" Height="512">
-                        <!-- Sacola / Presente Laranja -->
-                        <Path Data="m303.304 223.884c27.358-45.85 90.555-130.467 101.96-141.872 14.874-14.874 38.989-14.874 53.862 0 14.874 14.874 14.874 38.988 0 53.862-11.406 11.406-96.022 74.602-141.872 101.96-4.054 2.417-9.068 1.792-12.405-1.545s-3.962-8.35-1.545-12.405z" Fill="#FCA62F" />
-                        <Path Data="m461.738 84.9c12.204 14.959 11.334 37.029-2.611 50.974-11.405 11.406-96.022 74.602-141.872 101.96-4.054 2.417-9.068 1.792-12.405-1.545-2.283-2.283-3.296-5.349-2.936-8.356 2.932 1.294 6.351 1.132 9.272-.61 45.85-27.358 130.466-90.555 141.872-101.96 10.939-10.94 13.832-26.878 8.68-40.463z" Fill="#FB9927" />
+            <!-- Glow radial de fundo: elimina o vazio opressivo sem poluir a tela -->
+            <Ellipse Width="420" Height="320" IsHitTestVisible="False">
+                <Ellipse.Fill>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#3010B981" Offset="0" />
+                        <GradientStop Color="#0010B981"  Offset="1" />
+                    </RadialGradientBrush>
+                </Ellipse.Fill>
+            </Ellipse>
 
-                        <!-- Pão / Baguete -->
-                        <Path Data="m273.153 58.78c-18.524-2.593-30.256 4.045-50.952 26.712-19.918 3.318-32.687 15.463-38.308 36.436-16.044 9.764-24.125 25.624-24.245 47.581-27.925 41.126 9.981 130.649 79.737 60.894l101.482-101.483c38.139-38.52-14.11-102.919-67.714-70.14z" Fill="#C48958" />
-                        <Path Data="m150.922 193.873c-5.269 42.769 30.662 94.33 88.463 36.529l101.482-101.482c11.615-11.73 14.835-25.859 12.199-38.913-1.607 7.688-5.507 15.243-12.199 22.003l-101.482 101.481c-50.267 50.266-83.99 17.823-88.463-19.618z" Fill="#B5733E" />
-                        <Path Data="m198.481 184.04c-4.786-3.153-10.586-6.049-17.259-8.547-6.423-2.405-13.656-4.441-21.573-5.985.028-5.069.48-9.813 1.356-14.233.503-2.535 1.145-4.963 1.927-7.285 22.286 9.001 36.697 18.544 43.141 28.458 3.665 5.637 4.753 11.395 3.249 17.24-2.601-3.369-6.256-6.627-10.841-9.648zm116.904-87.353c-2.664-9.189-14.348-21.451-27.591-30.16-4.794-3.153-9.793-5.84-14.642-7.747 1.472-.9 2.943-1.727 4.411-2.483 6.202-3.194 12.352-5.125 18.312-5.987 23.922 17.169 29.322 32.835 19.51 46.377zm-68.739 4.148c-7.826-7.068-16.692-12.694-24.445-15.343 6.399-7.009 11.941-12.485 17.092-16.63 8.396 5.449 15.367 12.014 20.424 18.901 6.388 8.7 9.721 17.913 9.009 26.032-.344 3.919-1.63 7.584-3.97 10.814-.66-1.522-1.424-3.047-2.278-4.565-3.831-6.806-9.49-13.481-15.832-19.209zm-34.551 34.55c8.229 5.266 14.496 10.95 18.397 16.645.597.872 1.14 1.745 1.625 2.617.834-1.966 1.4-3.94 1.687-5.929 1.145-7.914-2.109-16.048-10.312-24.729-6.641-7.029-16.525-14.417-29.945-22.338-4.274 5.454-7.492 12.213-9.653 20.277 10.919 3.886 20.434 8.485 28.201 13.457z" Fill="#F2D1A5" />
-                        <Path Data="m198.481 184.04c-4.786-3.153-10.586-6.049-17.259-8.547-6.423-2.405-13.656-4.441-21.573-5.985.011-2.042.091-4.032.24-5.969 8.327 1.274 16.552 3.47 24.44 6.423 6.674 2.499 12.474 5.394 17.26 8.548 3.129 2.061 5.824 4.233 8.047 6.475.543 2.877.44 5.779-.313 8.704-2.602-3.37-6.257-6.628-10.842-9.649zm116.904-87.353c-2.664-9.189-14.348-21.451-27.591-30.16-4.794-3.153-9.793-5.84-14.642-7.747 1.472-.9 2.943-1.727 4.411-2.483.901-.464 1.802-.901 2.701-1.313 3.562 1.678 7.153 3.723 10.636 6.013 13.24 8.707 24.923 20.967 27.589 30.156-.758 1.881-1.794 3.726-3.104 5.534zm-68.739 4.148c-7.826-7.068-16.692-12.694-24.445-15.343 1.599-1.752 3.145-3.408 4.645-4.971 7.372 2.834 15.593 8.179 22.906 14.784 6.342 5.728 12.002 12.403 15.832 19.208.797 1.416 1.515 2.837 2.143 4.257-.669 2.063-1.653 4.02-2.971 5.839-.66-1.522-1.424-3.047-2.278-4.565-3.831-6.806-9.49-13.481-15.832-19.209zm-34.551 34.55c8.229 5.266 14.496 10.95 18.397 16.645.597.872 1.14 1.745 1.625 2.617.834-1.966 1.4-3.94 1.687-5.929.08-.55.137-1.101.174-1.653-.124-.189-.251-.377-.38-.566-3.9-5.694-10.168-11.378-18.396-16.644-7.352-4.706-21.151-11.771-29.478-13.762-.677 1.863-1.287 3.808-1.831 5.835 10.92 3.886 20.435 8.485 28.202 13.457z" Fill="#ECBA78" />
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20">
 
-                        <!-- Cenoura / Verdura Verde -->
-                        <Path Data="m413.99 36.819c4.422 2.553 5.951 8.259 3.398 12.68l-34.108 59.077c-2.553 4.422-8.259 5.95-12.68 3.398-4.421-2.553-5.951-8.259-3.398-12.68l34.108-59.077c2.553-4.422 8.259-5.951 12.68-3.398z" Fill="#ABD641" />
-                        <Path Data="m298.643 212.355c17.895-63.141 22.986-109.192 32.899-126.362 12.928-22.391 41.559-30.063 63.95-17.135s30.063 41.559 17.135 63.95c-9.913 17.17-47.249 44.604-92.983 91.672-4.045 4.16-10.195 5.013-15.22 2.112-5.024-2.901-7.361-8.654-5.781-14.237z" Fill="#C2ED56" />
-                        <Path Data="m380.107 63.266c5.274.916 10.48 2.76 15.386 5.592 22.391 12.928 30.063 41.559 17.135 63.95-9.913 17.17-47.249 44.604-92.983 91.672-4.045 4.16-10.195 5.013-15.22 2.112-1.515-.875-2.784-2.009-3.777-3.319 2.036-.588 3.944-1.71 5.528-3.339 45.734-47.068 83.07-74.502 92.983-91.673 12.927-22.391 5.256-51.022-17.135-63.95-.634-.365-1.274-.712-1.917-1.045z" Fill="#B7E546" />
+                <!-- ================================================================
+                     ÍCONE: SCANNER DE CÓDIGO DE BARRAS
+                     Estrutura: Border arredondado (SuccessContainer) +
+                     Canvas 72×72 com targeting reticle (4 cantos verdes) +
+                     barcode (7 barras PrimaryText semi-opaco) +
+                     scan line animada com gradiente horizontal (EasingFunction sine)
+                     ================================================================ -->
+                <Border Width="116" Height="116" CornerRadius="24"
+                        Background="{DynamicResource SuccessContainerBrush}"
+                        BorderBrush="{DynamicResource AccentGreenBrush}"
+                        BorderThickness="1.5"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,22">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#10B981" BlurRadius="18" ShadowDepth="0" Opacity="0.22" />
+                    </Border.Effect>
 
-                        <!-- Pacote de Leite / Caixa Azul -->
-                        <Path Data="m148.295 33.216h94.134c2.673 0 4.859 2.186 4.859 4.859v21.727c0 2.673-2.186 4.859-4.859 4.859h-94.134c-2.673 0-4.859-2.186-4.859-4.859v-21.727c0-2.673 2.186-4.859 4.859-4.859z" Fill="#C4E2FF" />
-                        <Path Data="m148.294 33.216h10.989c-2.673 0-4.859 2.186-4.859 4.859v21.727c0 2.673 2.186 4.859 4.859 4.859h-10.989c-2.673 0-4.859-2.186-4.859-4.859v-21.727c.001-2.673 2.187-4.859 4.859-4.859z" Fill="#ADD5FA" />
-                        <Path Data="m247.288 58.745 30.763 53.285v165.38h-102.02l10.604-218.665z" Fill="#60B7FF" />
-                        <Path Data="m143.436 58.745h103.852l-30.765 53.285v45.357l-103.852-2.995v-42.362z" Fill="#D8ECFE" />
-                        <Path Data="m143.436 58.745h10.989l-30.765 53.285v42.362l92.863 2.678v.317l-103.852-2.995v-42.362z" Fill="#C4E2FF" />
-                        <Path Data="m112.671 112.03h103.852v165.38h-95.754c-4.454 0-8.098-3.644-8.098-8.098z" Fill="#8AC9FE" />
-                        <Path Data="m112.671 112.03h10.989v157.282c0 4.454 3.644 8.098 8.098 8.098h-10.988c-4.454 0-8.098-3.644-8.098-8.098v-157.282z" Fill="#60B7FF" />
-                        <Path Data="m142.003 162.033h45.189c4.454 0 8.098 3.644 8.098 8.098v49.178c0 4.454-3.644 8.098-8.098 8.098h-45.189c-4.454 0-8.098-3.644-8.098-8.098v-49.178c0-4.454 3.644-8.098 8.098-8.098z" Fill="#ECEFF1" />
-                        <Path Data="m187.191 162.033c4.455 0 8.099 3.644 8.099 8.098v49.178c0 4.454-3.644 8.098-8.098 8.098h-45.189c-4.454 0-8.098-3.644-8.098-8.098h45.188c4.454 0 8.098-3.644 8.098-8.098z" Fill="#D1D1D6" />
+                    <!-- Canvas 72×72: posição absoluta dos elementos do scanner -->
+                    <Canvas Width="72" Height="72"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
 
-                        <!-- Corpo do Carrinho Azul Claro -->
-                        <Path Data="m104.941 167.684h346.788l-60.002 181.558h-246.785z" Fill="#C4E2FF" />
-                        <Path Data="m368.634 408.381c8.23 0 14.902 6.672 14.902 14.902s-6.672 14.902-14.902 14.902h-226.525c-15.329 0-29.254-6.26-39.34-16.346s-16.346-24.011-16.346-39.34 6.26-29.254 16.346-39.34c5.911-5.91 13.14-10.507 21.198-13.3l-56.791-235.253c-.128-.531-.409-.967-.784-1.263-.347-.273-.839-.431-1.422-.431h-34.041c-8.23 0-14.902-6.672-14.902-14.902s6.672-14.902 14.902-14.902h34.041c7.425 0 14.315 2.502 19.817 6.834 5.475 4.31 9.512 10.426 11.262 17.679l16.203 67.118h343.282c8.23 0 14.903 6.672 14.903 14.902 0 1.944-.373 3.8-1.05 5.502l-43.723 141.754c-3.681 11.935-10.851 21.836-20.247 28.771-9.465 6.986-21.056 10.949-33.498 10.949h-229.81c-7.102 0-13.569 2.916-18.268 7.614-4.698 4.698-7.614 11.165-7.614 18.267s2.916 13.57 7.614 18.268 11.165 7.614 18.268 7.614h226.525zm-214.842-81.567h218.127c6.008 0 11.469-1.814 15.802-5.012 4.403-3.25 7.78-7.941 9.536-13.635 17.514-56.784 11.572-37.517 38.13-123.622-143.328 0-174.183 0-315.94 0 20.123 83.359 15.047 62.332 34.345 142.269z" Fill="#D8ECFE" />
-                        <Path Data="m30.928 92.913c-8.23 0-14.902-6.672-14.902-14.902s6.672-14.902 14.902-14.902h34.042c7.425 0 14.315 2.502 19.817 6.834 5.475 4.31 9.512 10.426 11.262 17.679l1.277 5.291z" Fill="#D1D1D6" />
+                        <!-- Targeting Reticle: 4 cantos estilo scanner profissional -->
+                        <!-- Canto superior esquerdo -->
+                        <Rectangle Canvas.Left="4"   Canvas.Top="4"   Width="16"  Height="2.5" Fill="{DynamicResource AccentGreenBrush}" />
+                        <Rectangle Canvas.Left="4"   Canvas.Top="4"   Width="2.5" Height="16"  Fill="{DynamicResource AccentGreenBrush}" />
+                        <!-- Canto superior direito -->
+                        <Rectangle Canvas.Left="52"  Canvas.Top="4"   Width="16"  Height="2.5" Fill="{DynamicResource AccentGreenBrush}" />
+                        <Rectangle Canvas.Left="65.5" Canvas.Top="4"  Width="2.5" Height="16"  Fill="{DynamicResource AccentGreenBrush}" />
+                        <!-- Canto inferior esquerdo -->
+                        <Rectangle Canvas.Left="4"   Canvas.Top="65.5" Width="16" Height="2.5" Fill="{DynamicResource AccentGreenBrush}" />
+                        <Rectangle Canvas.Left="4"   Canvas.Top="52"   Width="2.5" Height="16" Fill="{DynamicResource AccentGreenBrush}" />
+                        <!-- Canto inferior direito -->
+                        <Rectangle Canvas.Left="52"  Canvas.Top="65.5" Width="16" Height="2.5" Fill="{DynamicResource AccentGreenBrush}" />
+                        <Rectangle Canvas.Left="65.5" Canvas.Top="52"  Width="2.5" Height="16" Fill="{DynamicResource AccentGreenBrush}" />
 
-                        <!-- Rodas do Carrinho -->
-                        <Path Data="M 188.946 478.547 C 215.882 478.547 237.717 456.712 237.717 429.776 C 237.717 402.84 215.882 381.005 188.946 381.005 C 162.01 381.005 140.175 402.84 140.175 429.776 C 140.175 456.712 162.01 478.547 188.946 478.547 Z" Fill="#9FACBA" />
-                        <Path Data="M 188.946 449.634 C 199.914 449.634 208.804 440.744 208.804 429.776 C 208.804 418.808 199.914 409.918 188.946 409.918 C 177.978 409.918 169.088 418.808 169.088 429.776 C 169.088 440.744 177.978 449.634 188.946 449.634 Z" Fill="#ECEFF1" />
-                        <Path Data="M 370.188 478.547 C 397.124 478.547 418.959 456.712 418.959 429.776 C 418.959 402.84 397.124 381.005 370.188 381.005 C 343.252 381.005 321.417 402.84 321.417 429.776 C 321.417 456.712 343.252 478.547 370.188 478.547 Z" Fill="#9FACBA" />
-                        <Path Data="M 370.188 449.634 C 381.156 449.634 390.046 440.744 390.046 429.776 C 390.046 418.808 381.156 409.918 370.188 409.918 C 359.22 409.918 350.33 418.808 350.33 429.776 C 350.33 440.744 359.22 449.634 370.188 449.634 Z" Fill="#ECEFF1" />
+                        <!-- Área do código de barras: Canvas interno ClipToBounds=True
+                             confina a scan line dentro da área de leitura (não vaza para fora) -->
+                        <Canvas Canvas.Left="14" Canvas.Top="18" Width="44" Height="36" ClipToBounds="True">
+
+                            <!-- 7 barras com espessura variada (padrão de barcode real) -->
+                            <Rectangle Canvas.Left="0"  Canvas.Top="0" Width="2" Height="36" Fill="{DynamicResource PrimaryTextBrush}" Opacity="0.45" />
+                            <Rectangle Canvas.Left="5"  Canvas.Top="0" Width="4" Height="36" Fill="{DynamicResource PrimaryTextBrush}" Opacity="0.45" />
+                            <Rectangle Canvas.Left="12" Canvas.Top="0" Width="2" Height="36" Fill="{DynamicResource PrimaryTextBrush}" Opacity="0.45" />
+                            <Rectangle Canvas.Left="18" Canvas.Top="0" Width="5" Height="36" Fill="{DynamicResource PrimaryTextBrush}" Opacity="0.45" />
+                            <Rectangle Canvas.Left="27" Canvas.Top="0" Width="2" Height="36" Fill="{DynamicResource PrimaryTextBrush}" Opacity="0.45" />
+                            <Rectangle Canvas.Left="33" Canvas.Top="0" Width="4" Height="36" Fill="{DynamicResource PrimaryTextBrush}" Opacity="0.45" />
+                            <Rectangle Canvas.Left="40" Canvas.Top="0" Width="2" Height="36" Fill="{DynamicResource PrimaryTextBrush}" Opacity="0.45" />
+
+                            <!-- Linha de scan: gradiente horizontal (fade-in / fade-out nas bordas)
+                                 simula o beam de leitura laser. Animação SineEase 0→33→0 em 1.5s. -->
+                            <Rectangle x:Name="ScanLine"
+                                       Canvas.Left="-1" Canvas.Top="0"
+                                       Width="46" Height="3"
+                                       RadiusX="1.5" RadiusY="1.5">
+                                <Rectangle.Fill>
+                                    <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                                        <GradientStop Color="#0010B981" Offset="0"    />
+                                        <GradientStop Color="#CC10B981" Offset="0.28" />
+                                        <GradientStop Color="#FF6EE7B7" Offset="0.5"  />
+                                        <GradientStop Color="#CC10B981" Offset="0.72" />
+                                        <GradientStop Color="#0010B981" Offset="1"    />
+                                    </LinearGradientBrush>
+                                </Rectangle.Fill>
+                                <Rectangle.RenderTransform>
+                                    <TranslateTransform x:Name="ScanTranslate" Y="0" />
+                                </Rectangle.RenderTransform>
+                                <Rectangle.Triggers>
+                                    <EventTrigger RoutedEvent="Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation
+                                                    Storyboard.TargetName="ScanTranslate"
+                                                    Storyboard.TargetProperty="Y"
+                                                    From="0" To="33"
+                                                    Duration="0:0:1.5"
+                                                    AutoReverse="True">
+                                                    <DoubleAnimation.EasingFunction>
+                                                        <SineEase EasingMode="EaseInOut" />
+                                                    </DoubleAnimation.EasingFunction>
+                                                </DoubleAnimation>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Rectangle.Triggers>
+                            </Rectangle>
+
+                        </Canvas>
                     </Canvas>
-                </Viewbox>
+                </Border>
 
-                <!-- Mensagem Principal de Estado -->
-                <TextBlock Text="CAIXA LIVRE" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="23" FontWeight="Black" HorizontalAlignment="Center" Margin="0,0,0,4" />
-                
-                <!-- Status Operacional -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,6">
-                    <Ellipse Width="10" Height="10" Fill="{DynamicResource SuccessForegroundBrush}" Margin="0,0,8,0" VerticalAlignment="Center" />
-                    <TextBlock Text="SCANNER PRONTO" Foreground="{DynamicResource SuccessForegroundBrush}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
+                <!-- ================================================================
+                     TÍTULO PRINCIPAL
+                     ================================================================ -->
+                <TextBlock Text="CAIXA LIVRE"
+                           Foreground="{DynamicResource PrimaryTextBrush}"
+                           FontSize="23" FontWeight="Black"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,8" />
+
+                <!-- ================================================================
+                     STATUS: SCANNER PRONTO
+                     Ponto sólido + anel de pulso animado (expand + fade-out em 1.8s)
+                     ================================================================ -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <!-- Grid 16×16 para sobrepor ponto sólido + anel de pulso -->
+                    <Grid Width="16" Height="16" Margin="0,0,8,0" VerticalAlignment="Center">
+                        <!-- Anel de pulso (expande e some, simula "heartbeat" do scanner) -->
+                        <Ellipse x:Name="PulseRing"
+                                 Width="16" Height="16"
+                                 Stroke="{DynamicResource SuccessForegroundBrush}"
+                                 StrokeThickness="1.5"
+                                 Opacity="0"
+                                 RenderTransformOrigin="0.5,0.5">
+                            <Ellipse.RenderTransform>
+                                <ScaleTransform x:Name="RingScale" ScaleX="0.8" ScaleY="0.8" />
+                            </Ellipse.RenderTransform>
+                            <Ellipse.Triggers>
+                                <EventTrigger RoutedEvent="Loaded">
+                                    <BeginStoryboard>
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimation Storyboard.TargetName="RingScale"
+                                                             Storyboard.TargetProperty="ScaleX"
+                                                             From="0.7" To="2.5"
+                                                             Duration="0:0:1.8" />
+                                            <DoubleAnimation Storyboard.TargetName="RingScale"
+                                                             Storyboard.TargetProperty="ScaleY"
+                                                             From="0.7" To="2.5"
+                                                             Duration="0:0:1.8" />
+                                            <DoubleAnimation Storyboard.TargetName="PulseRing"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             From="0.65" To="0"
+                                                             Duration="0:0:1.8" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Ellipse.Triggers>
+                        </Ellipse>
+                        <!-- Ponto sólido central -->
+                        <Ellipse Width="10" Height="10"
+                                 Fill="{DynamicResource SuccessForegroundBrush}"
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" />
+                    </Grid>
+                    <TextBlock Text="SCANNER PRONTO"
+                               Foreground="{DynamicResource SuccessForegroundBrush}"
+                               FontSize="14" FontWeight="Bold"
+                               VerticalAlignment="Center" />
                 </StackPanel>
 
-                <TextBlock Text="Aproxime o produto do scanner ou digite o código manualmente" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="13" HorizontalAlignment="Center" Margin="0,0,10,0" />
+                <!-- ================================================================
+                     INSTRUÇÃO OPERACIONAL
+                     ================================================================ -->
+                <TextBlock Text="Aproxime o produto ao scanner ou digite o código manualmente"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           FontSize="13"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,16" />
 
-                <!-- Dica de Atalho com Destaque -->
-                <Border Background="{DynamicResource SaleAreaBackgroundBrush}" BorderBrush="{DynamicResource AccentBlueBrush}" BorderThickness="1.5" CornerRadius="20" Padding="12,6" HorizontalAlignment="Center">
-                    <TextBlock Foreground="{DynamicResource AccentCyanBrush}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center">
+                <!-- ================================================================
+                     HINT F2: visual com CornerRadius=6 (consistente com o design system)
+                     Pill shape substituído por rounded-rect para alinhamento com o resto da UI
+                     ================================================================ -->
+                <Border Background="{DynamicResource SurfaceRaisedBrush}"
+                        BorderBrush="{DynamicResource AccentBlueBrush}"
+                        BorderThickness="1.5"
+                        CornerRadius="6"
+                        Padding="14,7"
+                        HorizontalAlignment="Center">
+                    <TextBlock FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Center">
                         <Run Text="F2" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" />
-                        <Run Text=" — Consultar produto" />
+                        <Run Text=" — Consultar produto" Foreground="{DynamicResource AccentCyanBrush}" />
                     </TextBlock>
                 </Border>
+
             </StackPanel>
         </Grid>
     </ControlTemplate>
