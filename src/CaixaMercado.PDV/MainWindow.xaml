@@ -565,7 +565,8 @@
                     </StackPanel>
 
                     <TextBlock Text="VALOR DO DESCONTO:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
-                    <TextBox x:Name="TxtValorDesconto" Text="{Binding ValorDescontoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" Style="{StaticResource PdvTextBoxStyle}" AutomationProperties.Name="Valor do desconto" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" Padding="10,6" Margin="0,0,0,16" />
+                    <!-- Bug fix #3: CaretBrush combinando com Foreground amarelo (estava herdando PrimaryTextBrush escuro) -->
+                    <TextBox x:Name="TxtValorDesconto" Text="{Binding ValorDescontoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" Style="{StaticResource PdvTextBoxStyle}" AutomationProperties.Name="Valor do desconto" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" CaretBrush="{DynamicResource AccentYellowBrush}" Padding="10,6" Margin="0,0,0,16" />
 
                     <UniformGrid Columns="2">
                         <Button x:Name="BtnCancelarDesconto" Content="CANCELAR (ESC)" Command="{Binding FecharModalDescontoCommand}" Style="{StaticResource NeutralButtonStyle}" AutomationProperties.Name="Cancelar desconto" FontSize="14" Padding="10" Margin="0,0,6,0" />
@@ -628,7 +629,8 @@
 
                     <!-- Campo Valor Recebido -->
                     <TextBlock Text="VALOR RECEBIDO R$:" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" FontWeight="Bold" Margin="0,0,0,6" />
-                    <TextBox x:Name="TxtValorPago" Text="{Binding ValorPagoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" Style="{StaticResource PdvTextBoxStyle}" AutomationProperties.Name="Valor recebido" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" Padding="10,6" Margin="0,0,0,16" />
+                    <!-- Bug fix #3: CaretBrush combinando com Foreground amarelo (estava herdando PrimaryTextBrush escuro) -->
+                    <TextBox x:Name="TxtValorPago" Text="{Binding ValorPagoInput, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}}" Style="{StaticResource PdvTextBoxStyle}" AutomationProperties.Name="Valor recebido" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource AccentYellowBrush}" CaretBrush="{DynamicResource AccentYellowBrush}" Padding="10,6" Margin="0,0,0,16" />
 
                     <!-- Troco Calculado -->
                     <Border Background="{DynamicResource SaleAreaBackgroundBrush}" CornerRadius="6" Padding="12" Margin="0,0,0,16">

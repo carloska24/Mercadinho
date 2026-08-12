@@ -10,18 +10,43 @@
         <Setter Property="Padding" Value="12" />
     </Style>
 
-    <!-- Base para todos os campos: seleção, caret e foco são controlados pelo tema. -->
+    <!-- Base para todos os campos. Template customizado garante VerticalContentAlignment=Center
+         funcione de verdade — o template padrão WPF ignora essa propriedade no TextBox. -->
     <Style x:Key="PdvTextBoxStyle" TargetType="TextBox">
         <Setter Property="Background" Value="{DynamicResource InputBackgroundBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
         <Setter Property="CaretBrush" Value="{DynamicResource PrimaryTextBrush}" />
         <Setter Property="SelectionBrush" Value="{DynamicResource InputSelectionBrush}" />
         <Setter Property="SelectionTextBrush" Value="{DynamicResource InputSelectionTextBrush}" />
-        <Setter Property="SelectionOpacity" Value="1" />
+        <!-- Bug fix #1B: era 1 (opaco total) — gerava bloco azul sólido ao selecionar texto -->
+        <Setter Property="SelectionOpacity" Value="0.75" />
         <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
         <Setter Property="BorderThickness" Value="1.5" />
         <Setter Property="Padding" Value="8,6" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
+        <!-- Bug fix #1A: Template customizado com ScrollViewer centralizado.
+             O default WPF ignora VerticalContentAlignment; aqui aplicamos via TemplateBinding. -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="6"
+                            SnapsToDevicePixels="True">
+                        <!-- PART_ContentHost é o nome reservado do WPF para a área de edição de texto -->
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Focusable="False"
+                                      HorizontalScrollBarVisibility="Hidden"
+                                      VerticalScrollBarVisibility="Hidden"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      Margin="{TemplateBinding Padding}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
         <Style.Triggers>
             <Trigger Property="IsKeyboardFocusWithin" Value="True">
                 <Setter Property="BorderBrush" Value="{DynamicResource FocusBrush}" />
@@ -328,8 +353,24 @@
         <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
         <Setter Property="BorderBrush" Value="Transparent" />
         <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="4,0" />
+        <!-- Bug fix #2: era 4,0 (sem padding vertical) — texto grudava no topo da linha -->
+        <Setter Property="Padding" Value="8,0" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <!-- Bug fix #2: Template com ContentPresenter centralizado verticalmente.
+             O template padrão do DataGridCell não aplica VerticalAlignment ao ContentPresenter. -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="DataGridCell">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
         <Style.Triggers>
             <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=DataGridRow}}" Value="True">
                 <Setter Property="Background" Value="{DynamicResource DataGridRowHoverBackgroundBrush}" />
@@ -441,7 +482,8 @@
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="BorderBrush" Value="{DynamicResource CardBorderBrush}" />
-        <Setter Property="BorderThickness" Value="0,0,1,1" />
+        <!-- Bug fix #4: era 0,0,1,1 — a borda inferior somava com a linha do grid criando linha dupla -->
+        <Setter Property="BorderThickness" Value="0,0,1,0" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="{DynamicResource DataGridRowHoverBackgroundBrush}" />
