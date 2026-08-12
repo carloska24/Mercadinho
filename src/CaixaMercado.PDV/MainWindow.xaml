@@ -267,7 +267,23 @@
 
                         <DockPanel Margin="0,4">
                             <TextBlock Text="DESCONTO R$ (F6):" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="13" />
-                            <TextBlock Text="{Binding VendaAtual.Desconto, StringFormat={}{0:N2}}" Foreground="{DynamicResource AccentYellowBrush}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" />
+                            <TextBlock FontSize="14" FontWeight="Bold" HorizontalAlignment="Right">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <!-- Padrão: neutro quando desconto = 0 -->
+                                        <Setter Property="Foreground" Value="{DynamicResource PrimaryTextBrush}" />
+                                        <Style.Triggers>
+                                            <!-- Destaca em amarelo apenas quando há desconto ativo -->
+                                            <DataTrigger Binding="{Binding VendaAtual.Desconto}" Value="0">
+                                                <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                                <TextBlock.Text>
+                                    <Binding Path="VendaAtual.Desconto" StringFormat="{}{0:N2}" />
+                                </TextBlock.Text>
+                            </TextBlock>
                         </DockPanel>
 
                         <DockPanel Margin="0,4">
@@ -278,12 +294,12 @@
                 </Border>
 
                 <!-- PAINEL DE TOTAL R$ EM ENORME DESTAQUE VISUAL -->
-                <Border Grid.Row="4" Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentGreenBrush}" BorderThickness="2" CornerRadius="8" Padding="16" Margin="0,0,0,10">
+                <Border Grid.Row="4" Background="{DynamicResource TotalPanelBackgroundBrush}" BorderBrush="{DynamicResource TotalPanelBorderBrush}" BorderThickness="2" CornerRadius="8" Padding="16" Margin="0,0,0,10">
                     <Grid VerticalAlignment="Center">
                         <StackPanel HorizontalAlignment="Center">
-                            <TextBlock Text="TOTAL A PAGAR" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,8" />
+                            <TextBlock Text="TOTAL A PAGAR" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,8" />
                             <TextBlock Text="{Binding VendaAtual.Total, StringFormat=R$ {0:N2}}"
-                                       Foreground="{DynamicResource AccentGreenBrush}" FontSize="44" FontWeight="Black"
+                                       Foreground="{DynamicResource AccentGreenBrush}" FontSize="52" FontWeight="Black"
                                        HorizontalAlignment="Center" />
                         </StackPanel>
                     </Grid>
@@ -379,11 +395,11 @@
                     </StackPanel>
                 </Button>
 
-                <!-- F9 PAGAMENTO (CreditCard) -->
-                <Button Command="{Binding AbrirPagamentoCommand}" Style="{StaticResource ToolbarShortcutButtonStyle}" AutomationProperties.Name="F9 Pagamento">
+                <!-- F9 PAGAMENTO (CreditCard) — destaque visual verde na toolbar -->
+                <Button Command="{Binding AbrirPagamentoCommand}" Style="{StaticResource PaymentShortcutButtonStyle}" AutomationProperties.Name="F9 Pagamento">
                     <StackPanel Orientation="Horizontal">
-                        <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentGreenBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
-                            <TextBlock Text="F9" Foreground="{DynamicResource AccentGreenBrush}" FontWeight="Bold" FontSize="11" />
+                        <Border Background="{DynamicResource SuccessActionBackgroundBrush}" BorderBrush="{DynamicResource AccentGreenBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
+                            <TextBlock Text="F9" Foreground="{DynamicResource OnAccentTextBrush}" FontWeight="Bold" FontSize="11" />
                         </Border>
                         <Path Data="M 20 4 H 4 c -1.11 0 -1.99 .89 -1.99 2 L 2 18 c 0 1.11 .89 2 2 2 h 16 c 1.11 0 2 -.89 2 -2 V 6 c 0 -1.11 -.89 -2 -2 -2 z m 0 14 H 4 v -6 h 16 v 6 z m 0 -10 H 4 V 6 h 16 v 2 z"
                               Fill="{DynamicResource AccentGreenBrush}" Width="14" Height="14" Stretch="Uniform" Margin="0,0,4,0" VerticalAlignment="Center" />
@@ -391,8 +407,8 @@
                     </StackPanel>
                 </Button>
 
-                <!-- ESC CANCELAR (Prohibit) -->
-                <Button Command="{Binding CancelarVendaCommand}" Style="{StaticResource ToolbarShortcutButtonStyle}" AutomationProperties.Name="Esc Cancelar venda">
+                <!-- ESC CANCELAR (Prohibit) — ação destrutiva: hover vermelho -->
+                <Button Command="{Binding CancelarVendaCommand}" Style="{StaticResource DangerShortcutButtonStyle}" AutomationProperties.Name="Esc Cancelar venda">
                     <StackPanel Orientation="Horizontal">
                         <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentRedBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
                             <TextBlock Text="ESC" Foreground="{DynamicResource AccentRedBrush}" FontWeight="Bold" FontSize="10" />
@@ -403,8 +419,8 @@
                     </StackPanel>
                 </Button>
 
-                <!-- DEL REMOVER (Trash) -->
-                <Button Command="{Binding RemoverItemCommand}" Style="{StaticResource ToolbarShortcutButtonStyle}" AutomationProperties.Name="Delete Remover item">
+                <!-- DEL REMOVER (Trash) — ação destrutiva: hover vermelho -->
+                <Button Command="{Binding RemoverItemCommand}" Style="{StaticResource DangerShortcutButtonStyle}" AutomationProperties.Name="Delete Remover item">
                     <StackPanel Orientation="Horizontal">
                         <Border Background="{DynamicResource SurfaceSunkenBrush}" BorderBrush="{DynamicResource AccentRedBrush}" BorderThickness="1" CornerRadius="3" Padding="4,1" Margin="0,0,5,0">
                             <TextBlock Text="DEL" Foreground="{DynamicResource AccentRedBrush}" FontWeight="Bold" FontSize="10" />

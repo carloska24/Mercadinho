@@ -63,7 +63,7 @@
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4"
+                            CornerRadius="6"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
@@ -169,7 +169,7 @@
                     <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="5"
+                            CornerRadius="6"
                             Padding="{TemplateBinding Padding}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
@@ -202,14 +202,19 @@
         <Setter Property="Margin" Value="1,1" />
     </Style>
 
-    <!-- Botão de Ação Destacado (Pagamento F9) -->
+    <!-- Botão de Ação Destacado (Pagamento F9) — usa PaymentButtonBackgroundBrush para destaque máximo -->
     <Style x:Key="PrimaryActionButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="{DynamicResource SuccessActionBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource PaymentButtonBackgroundBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource OnAccentTextBrush}" />
-        <Setter Property="FontSize" Value="20" />
+        <Setter Property="FontSize" Value="22" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Padding" Value="16,12" />
         <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="#059669" BlurRadius="12" ShadowDepth="0" Opacity="0.35" />
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -223,10 +228,10 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource SuccessActionHoverBrush}" />
+                            <Setter Property="Background" Value="{DynamicResource PaymentButtonHoverBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource SuccessActionPressedBrush}" />
+                            <Setter Property="Background" Value="{DynamicResource PaymentButtonPressedBrush}" />
                         </Trigger>
                         <Trigger Property="IsKeyboardFocused" Value="True">
                             <Setter TargetName="PrimaryChrome" Property="BorderBrush" Value="{DynamicResource FocusBrush}" />
@@ -235,11 +240,45 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Background" Value="{DynamicResource DisabledBackgroundBrush}" />
                             <Setter Property="Foreground" Value="{DynamicResource DisabledForegroundBrush}" />
+                            <Setter Property="Effect" Value="{x:Null}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <!-- Botão de Atalho Destrutivo (ESC, F7, DEL) — background vermelho tênue no hover -->
+    <Style x:Key="DangerShortcutButtonStyle" TargetType="Button" BasedOn="{StaticResource ShortcutButtonStyle}">
+        <Setter Property="Padding" Value="2,4" />
+        <Setter Property="Margin" Value="1,1" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource DangerContainerBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentRedBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource DangerActionPressedBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource OnAccentTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Botão de Atalho de Pagamento (F9 toolbar) — background verde tênue para destaque -->
+    <Style x:Key="PaymentShortcutButtonStyle" TargetType="Button" BasedOn="{StaticResource ShortcutButtonStyle}">
+        <Setter Property="Background" Value="{DynamicResource SuccessToolbarContainerBrush}" />
+        <Setter Property="Padding" Value="2,4" />
+        <Setter Property="Margin" Value="1,1" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource SuccessToolbarHoverBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentGreenBrush}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource PaymentButtonBackgroundBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource OnAccentTextBrush}" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!-- Estilo para o DataGrid de Itens -->
