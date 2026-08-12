@@ -57,4 +57,18 @@
     <SolidColorBrush x:Key="DataGridRowHoverBackgroundBrush" Color="#263751" />
     <SolidColorBrush x:Key="DataGridRowHoverForegroundBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="DataGridGridLinesBrush" Color="#1E2B42" />
+
+    <!-- === Tokens Redesign Visual PDV (Dark) === -->
+    <!-- Botão F9 Pagamento: verde saturado, distinguível do AccentGreen -->
+    <SolidColorBrush x:Key="PaymentButtonBackgroundBrush" Color="#16A34A" />
+    <SolidColorBrush x:Key="PaymentButtonHoverBrush" Color="#15803D" />
+    <SolidColorBrush x:Key="PaymentButtonPressedBrush" Color="#166534" />
+    <!-- Painel Total a Pagar -->
+    <SolidColorBrush x:Key="TotalPanelBackgroundBrush" Color="#052E16" />
+    <SolidColorBrush x:Key="TotalPanelBorderBrush" Color="#10B981" />
+    <!-- Toolbar destrutiva (ESC/F7/DEL) -->
+    <SolidColorBrush x:Key="DangerToolbarContainerBrush" Color="#7F1D1D" />
+    <!-- Toolbar F9 -->
+    <SolidColorBrush x:Key="SuccessToolbarContainerBrush" Color="#064E3B" />
+    <SolidColorBrush x:Key="SuccessToolbarHoverBrush" Color="#065F46" />
 </ResourceDictionary>

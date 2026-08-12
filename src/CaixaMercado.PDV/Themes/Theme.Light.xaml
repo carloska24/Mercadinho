@@ -1,15 +1,15 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#F3F6FA" />
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#EEF2F7" />
     <SolidColorBrush x:Key="HeaderBackgroundBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="CardBackgroundBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="CardBorderBrush" Color="#CBD5E1" />
-    <SolidColorBrush x:Key="SaleAreaBackgroundBrush" Color="#F8FAFC" />
+    <SolidColorBrush x:Key="SaleAreaBackgroundBrush" Color="#F1F5F9" />
     <SolidColorBrush x:Key="InputBackgroundBrush" Color="#FFFFFF" />
     <SolidColorBrush x:Key="InputBorderBrush" Color="#2563EB" />
     <SolidColorBrush x:Key="ControlBorderBrush" Color="#64748B" />
-    <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="#EAF0F7" />
-    <SolidColorBrush x:Key="SurfaceSunkenBrush" Color="#E2E8F0" />
+    <SolidColorBrush x:Key="SurfaceRaisedBrush" Color="#E8EEF5" />
+    <SolidColorBrush x:Key="SurfaceSunkenBrush" Color="#D9E4EF" />
     <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="#B3475568" />
 
     <SolidColorBrush x:Key="PrimaryTextBrush" Color="#172033" />
@@ -20,8 +20,10 @@
     <SolidColorBrush x:Key="SuccessForegroundBrush" Color="#047857" />
     <SolidColorBrush x:Key="DangerForegroundBrush" Color="#B91C1C" />
 
-    <SolidColorBrush x:Key="AccentGreenBrush" Color="#047857" />
-    <SolidColorBrush x:Key="AccentGreenHoverBrush" Color="#065F46" />
+    <!-- AccentGreen: cor para valores monetários/status de sucesso -->
+    <SolidColorBrush x:Key="AccentGreenBrush" Color="#059669" />
+    <SolidColorBrush x:Key="AccentGreenHoverBrush" Color="#047857" />
+    <!-- SuccessAction: botões de ação positiva (ex: Adicionar, Confirmar) -->
     <SolidColorBrush x:Key="SuccessActionBackgroundBrush" Color="#047857" />
     <SolidColorBrush x:Key="SuccessActionHoverBrush" Color="#065F46" />
     <SolidColorBrush x:Key="SuccessActionPressedBrush" Color="#064E3B" />
@@ -57,4 +59,18 @@
     <SolidColorBrush x:Key="DataGridRowHoverBackgroundBrush" Color="#E0ECFA" />
     <SolidColorBrush x:Key="DataGridRowHoverForegroundBrush" Color="#172033" />
     <SolidColorBrush x:Key="DataGridGridLinesBrush" Color="#D8E0EA" />
+
+    <!-- === Tokens Redesign Visual PDV === -->
+    <!-- Botão F9 Pagamento: verde #16A34A mais saturado/chamativo (distinto de AccentGreen) -->
+    <SolidColorBrush x:Key="PaymentButtonBackgroundBrush" Color="#16A34A" />
+    <SolidColorBrush x:Key="PaymentButtonHoverBrush" Color="#15803D" />
+    <SolidColorBrush x:Key="PaymentButtonPressedBrush" Color="#166534" />
+    <!-- Painel Total a Pagar: fundo verde tênue para contextualizar o valor -->
+    <SolidColorBrush x:Key="TotalPanelBackgroundBrush" Color="#ECFDF5" />
+    <SolidColorBrush x:Key="TotalPanelBorderBrush" Color="#059669" />
+    <!-- Toolbar: container de ações destrutivas (ESC/F7/DEL hover) -->
+    <SolidColorBrush x:Key="DangerToolbarHoverBrush" Color="#FECACA" />
+    <!-- Toolbar: container de ação de pagamento (F9) -->
+    <SolidColorBrush x:Key="SuccessToolbarContainerBrush" Color="#D1FAE5" />
+    <SolidColorBrush x:Key="SuccessToolbarHoverBrush" Color="#A7F3D0" />
 </ResourceDictionary>
